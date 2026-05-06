@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>DeepNet Runner - Tests</title>
+  <style>
+    body { font-family: monospace; background: #0a0a0f; color: #c0c0d0; padding: 20px; }
+    .pass { color: #00ff88; }
+    .fail { color: #ff3366; }
+    .suite { margin: 16px 0; }
+    .suite-name { color: #00ffff; font-size: 1.2em; }
+  </style>
+</head>
+<body>
+  <h1>Test Runner</h1>
+  <div id="results"></div>
+  <script type="module">
+    import { EventBus, bus } from '../js/core/event-bus.js';
+
+    const results = document.getElementById('results');
+    let passed = 0;
+    let failed = 0;
+
+    function assert(condition, message) {
+      if (condition) {
+        passed++;
+        log(message, 'pass');
+      } else {
+        failed++;
+        log(`FAIL: ${message}`, 'fail');
+      }
+    }
+
+    function log(msg, cls) {
+      const el = document.createElement('div');
+      el.className = cls;
+      el.textContent = `${cls === 'pass' ? '✓' : '✗'} ${msg}`;
+      results.appendChild(el);
+    }
+
+    function suite(name, fn) {
+      const el = document.createElement('div');
+      el.className = 'suite';
+      const title = document.createElement('div');
+      title.className = 'suite-name';
+      title.textContent = name;
+      el.appendChild(title);
+      results.appendChild(el);
+      const prevResults = results;
+      results = el;
+      fn();
+      results = prevResults;
+    }
+
+    // --- EventBus Tests ---
+
+    suite('EventBus', () => {
+      suite('on/emit', () => {
+        const eb = new EventBus();
+        let received = null;
+        eb.on('test', (data) => { received = data; });
+        eb.emit('test', { value: 42 });
+        assert(received && received.value === 42, 'on receives data from emit');
+      });
+
+      suite('off', () => {
+        const eb = new EventBus();
+        let count = 0;
+        const handler = () => { count++; };
+        eb.on('test', handler);
+        eb.emit('test');
+        eb.off('test', handler);
+        eb.emit('test');
+        assert(count === 1, 'off removes handler');
+      });
+
+      suite('once', () => {
+        const eb = new EventBus();
+        let count = 0;
+        eb.once('test', () => { count++; });
+        eb.emit('test');
+        eb.emit('test');
+        assert(count === 1, 'once fires only once');
+      });
+
+      suite('multiple handlers', () => {
+        const eb = new EventBus();
+        let a = false, b = false;
+        eb.on('test', () => { a = true; });
+        eb.on('test', () => { b = true; });
+        eb.emit('test');
+        assert(a && b, 'multiple handlers all fire');
+      });
+
+      suite('clear', () => {
+        const eb = new EventBus();
+        let count = 0;
+        eb.on('test', () => { count++; });
+        eb.clear();
+        eb.emit('test');
+        assert(count === 0, 'clear removes all handlers');
+      });
+
+      suite('no error on missing event', () => {
+        const eb = new EventBus();
+        let threw = false;
+        try { eb.emit('nonexistent'); } catch (e) { threw = true; }
+        assert(!threw, 'emit on missing event does not throw');
+      });
+    });
+
+    // Summary
+    const summary = document.createElement('div');
+    summary.style.marginTop = '20px';
+    summary.style.fontSize = '1.2em';
+    summary.className = failed > 0 ? 'fail' : 'pass';
+    summary.textContent = `\nResults: ${passed} passed, ${failed} failed`;
+    results.appendChild(summary);
+  </script>
+</body>
+</html>
