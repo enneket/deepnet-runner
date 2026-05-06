@@ -44,6 +44,7 @@ body {
   display: flex;
   gap: var(--space-lg);
   font-size: var(--font-size-sm);
+  align-items: center;
 }
 
 .stat-bar {
@@ -233,4 +234,28 @@ body {
 
 #game-output::-webkit-scrollbar-thumb:hover {
   background: var(--color-cyan);
+}
+
+/* Language toggle */
+.lang-toggle {
+  background: transparent;
+  border: 1px solid var(--color-cyan);
+  color: var(--color-cyan);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  padding: 2px 8px;
+  cursor: pointer;
+  margin-left: auto;
+  transition: all var(--duration-fast) var(--ease-out);
+  white-space: nowrap;
+}
+
+.lang-toggle:hover {
+  background: var(--color-cyan);
+  color: var(--color-bg);
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+.lang-toggle:active {
+  transform: scale(0.95);
 }

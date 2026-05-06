@@ -1,5 +1,6 @@
 import { bus } from '../core/event-bus.js';
 import { SKILLS, getSkill } from '../data/skills.js';
+import { i18n } from './i18n.js';
 
 /**
  * SkillsSystem - Manages skill tree and skill unlocking
@@ -32,7 +33,7 @@ export class SkillsSystem {
       });
 
       bus.emit('ui:message', {
-        text: `⬆ 升级了！你现在是 ${newLevel} 级。+1 技能点。`,
+        text: i18n.t('skills.levelUp', newLevel),
         className: 'neon-text'
       });
 
@@ -46,13 +47,13 @@ export class SkillsSystem {
     const skillPoints = player.skillPoints || 0;
 
     bus.emit('ui:clear');
-    bus.emit('ui:message', { text: '🔮 技能树', className: 'room-title' });
-    bus.emit('ui:message', { text: `技能点：${skillPoints}`, className: 'event-text' });
+    bus.emit('ui:message', { text: i18n.t('skills.title'), className: 'room-title' });
+    bus.emit('ui:message', { text: i18n.t('skills.points', skillPoints), className: 'event-text' });
 
     const branches = {
-      brute_force: { name: '暴力破解', skills: [] },
-      stealth: { name: '隐匿渗透', skills: [] },
-      system_control: { name: '系统操控', skills: [] }
+      brute_force: { nameKey: 'skills.branch.brute', skills: [] },
+      stealth: { nameKey: 'skills.branch.stealth', skills: [] },
+      system_control: { nameKey: 'skills.branch.control', skills: [] }
     };
 
     for (const [id, skill] of Object.entries(SKILLS)) {
@@ -64,7 +65,7 @@ export class SkillsSystem {
     const choices = [];
 
     for (const [branchId, branch] of Object.entries(branches)) {
-      bus.emit('ui:message', { text: `\n--- ${branch.name.toUpperCase()} ---`, className: 'event-text' });
+      bus.emit('ui:message', { text: `\n--- ${i18n.t(branch.nameKey).toUpperCase()} ---`, className: 'event-text' });
 
       for (const skill of branch.skills) {
         const isUnlocked = unlocked.includes(skill.id);
@@ -74,13 +75,13 @@ export class SkillsSystem {
 
         const status = isUnlocked ? '✓' : canUnlock ? '○' : '✗';
         bus.emit('ui:message', {
-          text: `  ${status} ${skill.name} — ${skill.description} [${skill.ramCost} RAM]`,
+          text: `  ${status} ${i18n.t(skill.nameKey)} — ${i18n.t(skill.descKey)} [${skill.ramCost} RAM]`,
           className: isUnlocked ? 'loot-text' : 'event-text'
         });
 
         if (canUnlock) {
           choices.push({
-            label: `解锁：${skill.name}`,
+            label: `${i18n.t('skills.unlock')}${i18n.t(skill.nameKey)}`,
             action: () => this.unlock(skill.id)
           });
         }
@@ -88,7 +89,7 @@ export class SkillsSystem {
     }
 
     choices.push({
-      label: '← Back',
+      label: i18n.t('inventory.back'),
       action: () => bus.emit('exploration:chooseNode', this._state.get('game.currentNode'))
     });
 
@@ -100,17 +101,17 @@ export class SkillsSystem {
     const skill = getSkill(skillId);
 
     if (!skill) {
-      bus.emit('ui:message', { text: '错误：未找到技能。', className: 'combat-log' });
+      bus.emit('ui:message', { text: i18n.t('skills.notFound'), className: 'combat-log' });
       return;
     }
 
     if ((player.skillPoints || 0) <= 0) {
-      bus.emit('ui:message', { text: '没有可用的技能点。', className: 'combat-log' });
+      bus.emit('ui:message', { text: i18n.t('skills.noPoints'), className: 'combat-log' });
       return;
     }
 
     if (skill.requires && !(player.skills || []).includes(skill.requires)) {
-      bus.emit('ui:message', { text: `需要：${skill.requires}`, className: 'combat-log' });
+      bus.emit('ui:message', { text: i18n.t('skills.requires', skill.requires), className: 'combat-log' });
       return;
     }
 
@@ -123,7 +124,7 @@ export class SkillsSystem {
     });
 
     bus.emit('ui:message', {
-      text: `已解锁：${skill.name}！`,
+      text: i18n.t('skills.unlocked', skill.name),
       className: 'neon-text'
     });
 

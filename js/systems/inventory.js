@@ -1,5 +1,6 @@
 import { bus } from '../core/event-bus.js';
 import { getItem } from '../data/items.js';
+import { i18n } from './i18n.js';
 
 /**
  * InventorySystem - Manages player inventory and equipment
@@ -19,11 +20,11 @@ export class InventorySystem {
     const inventory = player.inventory || [];
 
     bus.emit('ui:clear');
-    bus.emit('ui:message', { text: '📦 背包', className: 'room-title' });
-    bus.emit('ui:message', { text: `信用点：${player.credits || 0}`, className: 'event-text' });
+    bus.emit('ui:message', { text: i18n.t('inventory.title'), className: 'room-title' });
+    bus.emit('ui:message', { text: i18n.t('inventory.credits', player.credits || 0), className: 'event-text' });
 
     if (inventory.length === 0) {
-      bus.emit('ui:message', { text: '空的。', className: 'event-text' });
+      bus.emit('ui:message', { text: i18n.t('inventory.empty'), className: 'event-text' });
     } else {
       const grouped = {};
       for (const itemId of inventory) {
@@ -49,18 +50,18 @@ export class InventorySystem {
       }
     }
 
-    bus.emit('ui:message', { text: '\n--- 已装备 ---', className: 'event-text' });
+    bus.emit('ui:message', { text: `\n${i18n.t('inventory.equipped')}`, className: 'event-text' });
     const equipped = player.equipped || {};
     bus.emit('ui:message', {
-      text: `  武器：${equipped.weapon ? getItem(equipped.weapon)?.name : '无'}`,
+      text: `  ${i18n.t('inventory.weapon')}${equipped.weapon ? getItem(equipped.weapon)?.name : i18n.t('inventory.none')}`,
       className: 'event-text'
     });
     bus.emit('ui:message', {
-      text: `  护甲：${equipped.armor ? getItem(equipped.armor)?.name : '无'}`,
+      text: `  ${i18n.t('inventory.armor')}${equipped.armor ? getItem(equipped.armor)?.name : i18n.t('inventory.none')}`,
       className: 'event-text'
     });
     bus.emit('ui:message', {
-      text: `  饰品：${equipped.accessory ? getItem(equipped.accessory)?.name : '无'}`,
+      text: `  ${i18n.t('inventory.accessory')}${equipped.accessory ? getItem(equipped.accessory)?.name : i18n.t('inventory.none')}`,
       className: 'event-text'
     });
 
@@ -72,7 +73,7 @@ export class InventorySystem {
     });
     if (equippable.length > 0) {
       choices.push({
-        label: '🔧 装备物品',
+        label: i18n.t('inventory.equip'),
         action: () => this._showEquipChoices()
       });
     }
@@ -83,13 +84,13 @@ export class InventorySystem {
     });
     if (consumables.length > 0) {
       choices.push({
-        label: '💊 使用消耗品',
+        label: i18n.t('inventory.useConsumable'),
         action: () => this._showUseChoices()
       });
     }
 
     choices.push({
-      label: '← 返回',
+      label: i18n.t('inventory.back'),
       action: () => bus.emit('exploration:chooseNode', this._state.get('game.currentNode'))
     });
 
@@ -129,7 +130,7 @@ export class InventorySystem {
       }
     });
 
-    bus.emit('ui:message', { text: `已装备 ${item.name}。`, className: 'loot-text' });
+    bus.emit('ui:message', { text: i18n.t('inventory.equippedItem', item.name), className: 'loot-text' });
     this.showInventory();
   }
 
@@ -148,12 +149,12 @@ export class InventorySystem {
     if (item.effect.hp) {
       const heal = Math.min(item.effect.hp, player.maxHp - player.hp);
       updates.player.hp = player.hp + heal;
-      bus.emit('ui:message', { text: `使用了 ${item.name}。+${heal} HP。`, className: 'loot-text' });
+      bus.emit('ui:message', { text: i18n.t('inventory.usedItem', item.name, heal, 'HP'), className: 'loot-text' });
     }
     if (item.effect.ram) {
       const restore = Math.min(item.effect.ram, player.maxRam - player.ram);
       updates.player.ram = player.ram + restore;
-      bus.emit('ui:message', { text: `使用了 ${item.name}。+${restore} RAM。`, className: 'loot-text' });
+      bus.emit('ui:message', { text: i18n.t('inventory.usedItem', item.name, restore, 'RAM'), className: 'loot-text' });
     }
 
     this._state.update(updates);
@@ -164,8 +165,8 @@ export class InventorySystem {
     const credits = this._state.get('player.credits') || 0;
 
     bus.emit('ui:clear');
-    bus.emit('ui:message', { text: '🛒 黑市', className: 'room-title' });
-    bus.emit('ui:message', { text: `你的信用点：${credits}`, className: 'event-text' });
+    bus.emit('ui:message', { text: i18n.t('shop.title'), className: 'room-title' });
+    bus.emit('ui:message', { text: i18n.t('shop.yourCredits', credits), className: 'event-text' });
 
     const shopItems = [
       { itemId: 'data_pack', price: 15 },
@@ -187,7 +188,7 @@ export class InventorySystem {
     }
 
     choices.push({
-      label: '← 离开商店',
+      label: i18n.t('shop.leave'),
       action: () => bus.emit('exploration:chooseNode', this._state.get('game.currentNode'))
     });
 
@@ -197,7 +198,7 @@ export class InventorySystem {
   _buyItem(itemId, price) {
     const credits = this._state.get('player.credits') || 0;
     if (credits < price) {
-      bus.emit('ui:message', { text: '"信用点不足，跑者。"', className: 'combat-log' });
+      bus.emit('ui:message', { text: i18n.t('shop.noCredits'), className: 'combat-log' });
       this.openShop();
       return;
     }
@@ -212,7 +213,7 @@ export class InventorySystem {
     });
 
     const item = getItem(itemId);
-    bus.emit('ui:message', { text: `已购买 ${item.name}。`, className: 'loot-text' });
+    bus.emit('ui:message', { text: i18n.t('shop.purchased', item.name), className: 'loot-text' });
     this.openShop();
   }
 
@@ -246,7 +247,7 @@ export class InventorySystem {
       }
     }
 
-    choices.push({ label: '← Back', action: () => this.showInventory() });
+    choices.push({ label: i18n.t('inventory.back'), action: () => this.showInventory() });
     bus.emit('ui:choices', choices);
   }
 
@@ -264,7 +265,7 @@ export class InventorySystem {
       }
     }
 
-    choices.push({ label: '← Back', action: () => this.showInventory() });
+    choices.push({ label: i18n.t('inventory.back'), action: () => this.showInventory() });
     bus.emit('ui:choices', choices);
   }
 }

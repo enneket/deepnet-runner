@@ -1,5 +1,6 @@
 import { bus } from './event-bus.js';
 import { formatStat } from '../utils/text.js';
+import { i18n } from '../systems/i18n.js';
 
 /**
  * Renderer - DOM rendering engine, subscribes to state changes
@@ -30,7 +31,15 @@ export class Renderer {
     this._stats.innerHTML = [
       this._statBar('HP', player.hp, player.maxHp, 'hp'),
       this._statBar('RAM', player.ram, player.maxRam, 'ram'),
+      `<button class="lang-toggle" id="lang-toggle">${i18n.t('lang.switch')}</button>`
     ].join('');
+
+    const langBtn = document.getElementById('lang-toggle');
+    if (langBtn) {
+      langBtn.addEventListener('click', () => {
+        i18n.toggle();
+      });
+    }
   }
 
   _statBar(label, current, max, cls) {
@@ -108,17 +117,17 @@ export class Renderer {
     const panel = document.createElement('div');
     panel.className = 'combat-panel neon-border';
     panel.innerHTML = `
-      <div class="combat-title">\u2694 战斗：${enemy.name}</div>
+      <div class="combat-title">${i18n.t('combat.title')}${enemy.name}</div>
       <div class="combatant">
-        <div class="combatant-name player">[你]</div>
+        <div class="combatant-name player">${i18n.t('combat.you')}</div>
         <div>${formatStat('HP', player.hp, player.maxHp)}</div>
         <div>${formatStat('RAM', player.ram, player.maxRam)}</div>
       </div>
       <div class="combatant">
-        <div class="combatant-name enemy">[敌人]</div>
+        <div class="combatant-name enemy">${i18n.t('combat.enemy')}</div>
         <div>${formatStat('HP', enemy.hp, enemy.maxHp)}</div>
         <div class="stat-bar">
-          <span class="label">类型</span>
+          <span class="label">${i18n.t('combat.type')}</span>
           <span>${enemy.type}</span>
         </div>
       </div>

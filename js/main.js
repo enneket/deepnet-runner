@@ -5,6 +5,7 @@ import { ExplorationSystem } from './systems/exploration.js';
 import { CombatSystem } from './systems/combat.js';
 import { InventorySystem } from './systems/inventory.js';
 import { SkillsSystem } from './systems/skills.js';
+import { i18n } from './systems/i18n.js';
 
 /**
  * Initial player state
@@ -52,10 +53,23 @@ class Game {
     bus.on('game:over', () => this._handleGameOver());
     bus.on('game:victory', () => this._handleVictory());
 
+    // Re-render on language change
+    i18n.onChange(() => {
+      this._renderer.renderStats();
+      this._updatePageTitle();
+      bus.emit('ui:clear');
+      const currentNode = this._state.get('game.currentNode');
+      const currentLayer = this._state.get('game.currentLayer');
+      if (currentNode && currentLayer) {
+        bus.emit('exploration:chooseNode', currentNode);
+      }
+    });
+
     // Debug commands
     window.game = {
       state: this._state,
       bus,
+      i18n,
       god: () => {
         this._state.update({
           player: { hp: 999, maxHp: 999, ram: 999, maxRam: 999, attack: 50, credits: 999 }
@@ -65,7 +79,17 @@ class Game {
     };
   }
 
+  _updatePageTitle() {
+    document.title = i18n.t('game.title');
+    const h1 = document.querySelector('#game-header h1');
+    if (h1) {
+      h1.textContent = i18n.t('game.title');
+    }
+    document.documentElement.lang = i18n.lang === 'zh' ? 'zh-CN' : 'en';
+  }
+
   start() {
+    this._updatePageTitle();
     this._renderer.renderStats();
 
     bus.emit('ui:message', {
@@ -73,7 +97,7 @@ class Game {
       className: 'neon-text'
     });
     bus.emit('ui:message', {
-      text: '\u2551       DEEPNET 跑者 v1.0             \u2551',
+      text: `\u2551       ${i18n.t('game.title')} v1.0             \u2551`,
       className: 'neon-text'
     });
     bus.emit('ui:message', {
@@ -82,11 +106,11 @@ class Game {
     });
     bus.emit('ui:message', { text: '', className: '' });
     bus.emit('ui:message', {
-      text: '你是一名网络跑者。你接入DeepNet以突破其核心。',
+      text: i18n.t('game.subtitle'),
       className: 'event-text'
     });
     bus.emit('ui:message', {
-      text: '穿越节点网络。对抗ICE。收集装备。活下去。',
+      text: i18n.t('game.description'),
       className: 'event-text'
     });
     bus.emit('ui:message', { text: '', className: '' });
@@ -101,7 +125,7 @@ class Game {
   _handleGameOver() {
     const choices = [
       {
-        label: '\uD83D\uDD04 重新开始',
+        label: i18n.t('game.restart'),
         action: () => {
           this._state.reset(INITIAL_STATE);
           this._renderer.renderStats();
@@ -115,13 +139,13 @@ class Game {
 
   _handleVictory() {
     bus.emit('ui:message', {
-      text: '你已征服DeepNet。网络属于你了。',
+      text: i18n.t('game.victory'),
       className: 'event-text'
     });
 
     const choices = [
       {
-        label: '\uD83D\uDD04 再来一次',
+        label: i18n.t('game.playAgain'),
         action: () => {
           this._state.reset(INITIAL_STATE);
           this._renderer.renderStats();
