@@ -12,9 +12,13 @@ export class ExplorationSystem {
     this._state = state;
     this._currentLayer = null;
     this._currentNode = null;
+    this._inCombat = false;
 
     bus.on('exploration:enterLayer', (layerNum) => this.enterLayer(layerNum));
     bus.on('exploration:chooseNode', (nodeId) => this.chooseNode(nodeId));
+    bus.on('combat:start', () => { this._inCombat = true; });
+    bus.on('game:over', () => { this._inCombat = false; });
+    bus.on('game:victory', () => { this._inCombat = false; });
   }
 
   enterLayer(layerNum) {
@@ -60,8 +64,12 @@ export class ExplorationSystem {
       className: 'room-desc'
     });
 
+    this._inCombat = false;
     this._handleNodeEvent(node);
-    this._showChoices(node);
+
+    if (!this._inCombat) {
+      this._showChoices(node);
+    }
   }
 
   _handleNodeEvent(node) {
