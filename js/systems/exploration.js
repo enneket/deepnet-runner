@@ -3,6 +3,7 @@ import { getLayer } from '../data/layers.js';
 import { ENEMIES } from '../data/enemies.js';
 import { getItem } from '../data/items.js';
 import { pick, roll, randInt } from '../utils/random.js';
+import { i18n } from './i18n.js';
 
 /**
  * ExplorationSystem - Manages node graph navigation
@@ -56,11 +57,11 @@ export class ExplorationSystem {
     const node = this._currentNode;
 
     bus.emit('ui:message', {
-      text: `📍 ${node.name}`,
+      text: `📍 ${i18n.t(node.nameKey)}`,
       className: 'room-title'
     });
     bus.emit('ui:message', {
-      text: node.description,
+      text: i18n.t(node.descKey),
       className: 'room-desc'
     });
 
@@ -94,7 +95,7 @@ export class ExplorationSystem {
         break;
       case 'entry':
         bus.emit('ui:message', {
-          text: '系统上线。选择你的路径。',
+          text: i18n.t('explore.online'),
           className: 'event-text'
         });
         break;
@@ -106,7 +107,7 @@ export class ExplorationSystem {
       const enemies = ['sentry', 'crawler'];
       const enemyId = pick(enemies);
       bus.emit('ui:message', {
-        text: '⚠ 检测到敌对程序！',
+        text: i18n.t('explore.hostile'),
         className: 'combat-log'
       });
       bus.emit('combat:start', { enemyId });
@@ -115,7 +116,7 @@ export class ExplorationSystem {
       const current = this._state.get('player.credits') || 0;
       this._state.set('player.credits', current + credits);
       bus.emit('ui:message', {
-        text: `💰 在废弃数据中发现 ${credits} 信用点。`,
+        text: i18n.t('explore.credits', credits),
         className: 'loot-text'
       });
     }
@@ -123,7 +124,7 @@ export class ExplorationSystem {
 
   _encryptedNodeEvent() {
     bus.emit('ui:message', {
-      text: '🔒 检测到重度加密。突破将触发防御系统。',
+      text: i18n.t('explore.encryption'),
       className: 'event-text'
     });
     const tier = this._state.get('game.currentLayer');
@@ -144,14 +145,14 @@ export class ExplorationSystem {
     });
 
     bus.emit('ui:message', {
-      text: `🔧 系统修复中。+${hpRestore} HP, +${ramRestore} RAM。`,
+      text: i18n.t('explore.repair', hpRestore, ramRestore),
       className: 'loot-text'
     });
   }
 
   _shopNodeEvent() {
     bus.emit('ui:message', {
-      text: '"欢迎，跑者。看到喜欢的了吗？"',
+      text: i18n.t('explore.shopWelcome'),
       className: 'event-text'
     });
   }
@@ -162,22 +163,22 @@ export class ExplorationSystem {
     this._state.set('player.xp', currentXp + xp);
 
     bus.emit('ui:message', {
-      text: `📡 数据碎片解码完成。+${xp} 经验值。`,
+      text: i18n.t('explore.fragment', xp),
       className: 'loot-text'
     });
     bus.emit('ui:message', {
-      text: '"第一批跑者称之为\'深层\'。他们说如果你倾听，数据会回响。"',
+      text: i18n.t('explore.lore'),
       className: 'event-text'
     });
   }
 
   _coreNodeEvent() {
     const layer = this._state.get('game.currentLayer');
-    const bossIds = { 1: 'overseer', 2: 'overseer', 3: 'overseer' };
+    const bossIds = { 1: 'overseer', 2: 'overseer', 3: 'overseer', 4: 'quantum_guardian', 5: 'abyss_lord' };
     const enemyId = bossIds[layer] || 'overseer';
 
     bus.emit('ui:message', {
-      text: '💀 检测到核心防火墙。准备战斗。',
+      text: i18n.t('explore.coreWarning'),
       className: 'combat-log'
     });
     bus.emit('combat:start', { enemyId, isBoss: true });
@@ -196,7 +197,7 @@ export class ExplorationSystem {
         };
         const symbol = symbols[connNode.type] || '?';
         choices.push({
-          label: `${symbol} ${connNode.name}`,
+          label: `${symbol} ${i18n.t(connNode.nameKey)}`,
           action: () => bus.emit('exploration:chooseNode', connId)
         });
       }
@@ -204,13 +205,13 @@ export class ExplorationSystem {
 
     if (node.type === 'shop') {
       choices.push({
-        label: '🛒 浏览商店',
+        label: i18n.t('explore.browseShop'),
         action: () => bus.emit('shop:open')
       });
     }
 
     choices.push({
-      label: '📦 查看背包',
+      label: i18n.t('explore.checkInventory'),
       action: () => bus.emit('inventory:show')
     });
 

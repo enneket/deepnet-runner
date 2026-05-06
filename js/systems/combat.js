@@ -4,6 +4,7 @@ import { SKILLS } from '../data/skills.js';
 import { getItem } from '../data/items.js';
 import { randInt, roll } from '../utils/random.js';
 import { formatStat } from '../utils/text.js';
+import { i18n } from './i18n.js';
 
 /**
  * CombatSystem - Turn-based combat engine
@@ -29,6 +30,8 @@ export class CombatSystem {
 
     this._enemy = {
       ...template,
+      name: i18n.t(template.nameKey),
+      type: i18n.t(template.typeKey),
       hp: Math.round(template.hp * scale),
       maxHp: Math.round(template.maxHp * scale),
       attack: Math.round(template.attack * scale),
@@ -37,7 +40,7 @@ export class CombatSystem {
     };
 
     bus.emit('ui:message', {
-      text: `⚔ 战斗：${this._enemy.name}`,
+      text: i18n.t('combat.title') + this._enemy.name,
       className: 'combat-title'
     });
 
@@ -50,11 +53,11 @@ export class CombatSystem {
     const enemy = this._enemy;
 
     bus.emit('ui:message', {
-      text: `[你]  ${formatStat('HP', player.hp, player.maxHp)}  ${formatStat('RAM', player.ram, player.maxRam)}`,
+      text: `${i18n.t('combat.you')}  ${formatStat('HP', player.hp, player.maxHp)}  ${formatStat('RAM', player.ram, player.maxRam)}`,
       className: 'event-text'
     });
     bus.emit('ui:message', {
-      text: `[敌人] ${formatStat('HP', enemy.hp, enemy.maxHp)}  类型：${enemy.type}`,
+      text: `${i18n.t('combat.enemy')} ${formatStat('HP', enemy.hp, enemy.maxHp)}  ${i18n.t('combat.type')}${enemy.type}`,
       className: 'combat-log'
     });
   }
@@ -64,7 +67,7 @@ export class CombatSystem {
     const choices = [];
 
     choices.push({
-      label: `⚔ 攻击协议 [${player.attack} 伤害]`,
+      label: i18n.t('combat.attack', player.attack),
       action: () => this._playerAttack()
     });
 
@@ -73,7 +76,7 @@ export class CombatSystem {
       const skill = SKILLS[skillId];
       if (skill && player.ram >= skill.ramCost) {
         choices.push({
-          label: `🔮 ${skill.name} [${skill.ramCost} RAM]`,
+          label: `🔮 ${i18n.t(skill.nameKey)} [${skill.ramCost} RAM]`,
           action: () => this._playerSkill(skill)
         });
       }
@@ -86,7 +89,7 @@ export class CombatSystem {
     });
     if (consumables.length > 0) {
       choices.push({
-        label: `💊 使用物品 (${consumables.length} 可用)`,
+        label: i18n.t('combat.useItem', consumables.length),
         action: () => this._showItemChoices()
       });
     }
@@ -103,8 +106,9 @@ export class CombatSystem {
 
     this._enemy.hp = Math.max(0, this._enemy.hp - finalDmg);
 
+    const critSuffix = isCrit ? ' — ' + i18n.t('combat.critical') : '';
     bus.emit('ui:message', {
-      text: `你造成 ${finalDmg} 点伤害${isCrit ? ' — 暴击！' : ''}`,
+      text: i18n.t('combat.strikes', i18n.t('combat.you'), finalDmg, critSuffix),
       className: isCrit ? 'loot-text' : 'event-text'
     });
 
@@ -119,13 +123,15 @@ export class CombatSystem {
     const player = this._state.get('player');
     this._state.set('player.ram', player.ram - skill.ramCost);
 
+    const skillName = i18n.t(skill.nameKey);
+
     switch (skill.effect) {
       case 'damage': {
         const baseDmg = player.attack * skill.damageMultiplier;
         const dmg = Math.max(1, Math.round(baseDmg) - this._enemy.defense);
         this._enemy.hp = Math.max(0, this._enemy.hp - dmg);
         bus.emit('ui:message', {
-          text: `${skill.name} 造成 ${dmg} 点伤害！`,
+          text: i18n.t('combat.deals', skillName, dmg),
           className: 'loot-text'
         });
         break;
@@ -134,7 +140,7 @@ export class CombatSystem {
         const reduction = Math.round(this._enemy.defense * skill.defenseReduction);
         this._enemy.defense -= reduction;
         bus.emit('ui:message', {
-          text: `${skill.name} 降低敌人防御 ${reduction} 点！`,
+          text: i18n.t('combat.debuff', skillName, reduction),
           className: 'event-text'
         });
         break;
@@ -143,7 +149,7 @@ export class CombatSystem {
         const heal = Math.min(skill.healAmount, player.maxHp - player.hp);
         this._state.set('player.hp', player.hp + heal);
         bus.emit('ui:message', {
-          text: `${skill.name} 恢复 ${heal} 点HP！`,
+          text: i18n.t('combat.heal', skillName, heal),
           className: 'loot-text'
         });
         break;
@@ -151,14 +157,14 @@ export class CombatSystem {
       case 'bypass': {
         if (roll(skill.bypassChance)) {
           bus.emit('ui:message', {
-            text: `${skill.name} 成功！战斗跳过！`,
+            text: i18n.t('combat.bypassSuccess', skillName),
             className: 'loot-text'
           });
           this._combatVictory();
           return;
         } else {
           bus.emit('ui:message', {
-            text: `${skill.name} 失败！敌人发现了你。`,
+            text: i18n.t('combat.bypassFail', skillName),
             className: 'combat-log'
           });
         }
@@ -183,8 +189,9 @@ export class CombatSystem {
     const newHp = Math.max(0, player.hp - finalDmg);
     this._state.set('player.hp', newHp);
 
+    const critSuffix = isCrit ? ' — ' + i18n.t('combat.critical') : '';
     bus.emit('ui:message', {
-      text: `${this._enemy.name} 造成 ${finalDmg} 点伤害${isCrit ? ' — 暴击！' : ''}`,
+      text: i18n.t('combat.strikes', this._enemy.name, finalDmg, critSuffix),
       className: 'combat-log'
     });
 
@@ -203,7 +210,7 @@ export class CombatSystem {
     this._state.set('player.xp', currentXp + xp);
 
     bus.emit('ui:message', {
-      text: `✓ ${enemy.name} 被击败！+${xp} 经验值`,
+      text: i18n.t('combat.defeated', enemy.name, xp),
       className: 'loot-text'
     });
 
@@ -211,8 +218,9 @@ export class CombatSystem {
       if (roll(loot.chance)) {
         const inventory = this._state.get('player.inventory') || [];
         this._state.set('player.inventory', [...inventory, loot.itemId]);
+        const lootItem = getItem(loot.itemId);
         bus.emit('ui:message', {
-          text: `  💰 战利品：${loot.itemId}`,
+          text: i18n.t('combat.loot', lootItem ? lootItem.name : loot.itemId),
           className: 'loot-text'
         });
       }
@@ -220,9 +228,9 @@ export class CombatSystem {
 
     if (enemy.isBoss) {
       const layer = this._state.get('game.currentLayer');
-      if (layer < 3) {
+      if (layer < 5) {
         bus.emit('ui:message', {
-          text: `🔥 防火墙已突破！正在下降到第${layer + 1}层...`,
+          text: i18n.t('explore.firewallBreach', layer + 1),
           className: 'neon-text-magenta'
         });
         setTimeout(() => {
@@ -230,7 +238,7 @@ export class CombatSystem {
         }, 1500);
       } else {
         bus.emit('ui:message', {
-          text: '🏆 你已到达DEEPNET核心。胜利！',
+          text: i18n.t('explore.victory'),
           className: 'neon-text'
         });
         bus.emit('game:victory');
@@ -244,11 +252,11 @@ export class CombatSystem {
 
   _combatDefeat() {
     bus.emit('ui:message', {
-      text: '💀 系统崩溃。你与DeepNet的连接已断开。',
+      text: i18n.t('game.systemCrash'),
       className: 'combat-log'
     });
     bus.emit('ui:message', {
-      text: '游戏结束',
+      text: i18n.t('game.over'),
       className: 'neon-text-magenta'
     });
     bus.emit('game:over');
@@ -257,7 +265,7 @@ export class CombatSystem {
   _showPostCombatChoices() {
     const choices = [
       {
-        label: '→ 继续探索',
+        label: i18n.t('explore.continue'),
         action: () => {
           bus.emit('ui:clear');
           const node = this._state.get('game.currentNode');
@@ -265,7 +273,7 @@ export class CombatSystem {
         }
       },
       {
-        label: '📦 查看背包',
+        label: i18n.t('explore.checkInventory'),
         action: () => bus.emit('inventory:show')
       }
     ];
@@ -287,7 +295,7 @@ export class CombatSystem {
     }
 
     choices.push({
-      label: '← 返回战斗',
+      label: i18n.t('combat.backToCombat'),
       action: () => this._showCombatChoices()
     });
 
@@ -309,12 +317,12 @@ export class CombatSystem {
     if (item.effect.hp) {
       const heal = Math.min(item.effect.hp, player.maxHp - player.hp);
       this._state.set('player.hp', player.hp + heal);
-      bus.emit('ui:message', { text: `使用了 ${item.name}。+${heal} HP。`, className: 'loot-text' });
+      bus.emit('ui:message', { text: i18n.t('combat.usedItem', item.name, heal, 'HP'), className: 'loot-text' });
     }
     if (item.effect.ram) {
       const restore = Math.min(item.effect.ram, player.maxRam - player.ram);
       this._state.set('player.ram', player.ram + restore);
-      bus.emit('ui:message', { text: `使用了 ${item.name}。+${restore} RAM。`, className: 'loot-text' });
+      bus.emit('ui:message', { text: i18n.t('combat.usedItem', item.name, restore, 'RAM'), className: 'loot-text' });
     }
 
     this._showCombatStatus();
