@@ -1,0 +1,86 @@
+/* Neon text glow */
+.neon-text {
+  color: var(--color-cyan);
+  text-shadow:
+    0 0 5px var(--color-cyan),
+    0 0 20px var(--color-cyan),
+    0 0 40px var(--color-cyan);
+  font-family: var(--font-mono);
+  letter-spacing: 0.15em;
+}
+
+.neon-text-magenta {
+  color: var(--color-magenta);
+  text-shadow:
+    0 0 5px var(--color-magenta),
+    0 0 20px var(--color-magenta);
+}
+
+/* CRT scanline overlay */
+.crt {
+  position: relative;
+  overflow: hidden;
+}
+
+.crt::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    transparent 0px,
+    transparent 2px,
+    rgba(0, 0, 0, 0.08) 2px,
+    rgba(0, 0, 0, 0.08) 4px
+  );
+  pointer-events: none;
+  z-index: 100;
+}
+
+/* Glitch effect for transitions */
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(2px, -2px); }
+  60% { transform: translate(-1px, -1px); }
+  80% { transform: translate(1px, 1px); }
+  100% { transform: translate(0); }
+}
+
+.glitch {
+  animation: glitch 0.3s ease;
+}
+
+/* Flickering effect */
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+.flicker {
+  animation: flicker 2s infinite;
+}
+
+/* Typing cursor */
+@keyframes blink-cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.cursor::after {
+  content: '█';
+  animation: blink-cursor 1s infinite;
+  color: var(--color-cyan);
+}
+
+/* Neon border glow */
+.neon-border {
+  border: var(--border-glow);
+  box-shadow:
+    0 0 5px rgba(0, 255, 255, 0.3),
+    inset 0 0 5px rgba(0, 255, 255, 0.1);
+}
+
+/* Progress bar glow */
+.bar-glow {
+  box-shadow: 0 0 8px currentColor;
+}

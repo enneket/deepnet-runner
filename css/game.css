@@ -1,0 +1,233 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#game {
+  width: 100%;
+  max-width: 720px;
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-lg);
+  background: var(--color-bg-panel);
+  border: var(--border-dim);
+}
+
+/* Header */
+#game-header {
+  padding-bottom: var(--space-md);
+  border-bottom: var(--border-dim);
+  margin-bottom: var(--space-md);
+}
+
+#game-header h1 {
+  font-size: var(--font-size-xl);
+  text-align: center;
+  margin-bottom: var(--space-sm);
+}
+
+#player-stats {
+  display: flex;
+  gap: var(--space-lg);
+  font-size: var(--font-size-sm);
+}
+
+.stat-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.stat-bar .label {
+  color: var(--color-text-dim);
+  min-width: 3em;
+}
+
+.bar-track {
+  width: 100px;
+  height: 8px;
+  background: #1a1a2e;
+  border: 1px solid #2a2a4a;
+}
+
+.bar-fill {
+  height: 100%;
+  transition: width var(--duration-normal) var(--ease-out);
+}
+
+.bar-fill.hp { background: var(--color-green); color: var(--color-green); }
+.bar-fill.ram { background: var(--color-cyan); color: var(--color-cyan); }
+
+.stat-value {
+  min-width: 4em;
+  text-align: right;
+  color: var(--color-text-dim);
+}
+
+/* Main output area */
+#game-output {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-md) 0;
+  line-height: 1.8;
+}
+
+#game-output .room-title {
+  color: var(--color-cyan);
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--space-sm);
+}
+
+#game-output .room-desc {
+  color: var(--color-text);
+  margin-bottom: var(--space-md);
+}
+
+#game-output .event-text {
+  color: var(--color-yellow);
+  margin-bottom: var(--space-sm);
+}
+
+#game-output .combat-log {
+  color: var(--color-red);
+  margin-bottom: var(--space-xs);
+}
+
+#game-output .loot-text {
+  color: var(--color-green);
+}
+
+/* Choice buttons */
+#choices {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding-top: var(--space-md);
+  border-top: var(--border-dim);
+}
+
+.choice-btn {
+  background: transparent;
+  border: var(--border-dim);
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-base);
+  padding: var(--space-sm) var(--space-md);
+  text-align: left;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.choice-btn:hover {
+  background: var(--color-bg-hover);
+  border-color: var(--color-cyan);
+  color: var(--color-cyan);
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+}
+
+.choice-btn:active {
+  transform: scale(0.98);
+}
+
+/* Combat panel */
+.combat-panel {
+  border: var(--border-glow);
+  padding: var(--space-md);
+  margin: var(--space-md) 0;
+}
+
+.combat-title {
+  color: var(--color-red);
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--space-md);
+}
+
+.combatant {
+  margin-bottom: var(--space-md);
+}
+
+.combatant-name {
+  font-weight: bold;
+  margin-bottom: var(--space-xs);
+}
+
+.combatant-name.player { color: var(--color-cyan); }
+.combatant-name.enemy { color: var(--color-red); }
+
+/* Node map display */
+.node-map {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  margin: var(--space-md) 0;
+}
+
+.node {
+  padding: var(--space-xs) var(--space-sm);
+  border: var(--border-dim);
+  font-size: var(--font-size-sm);
+}
+
+.node.current {
+  border-color: var(--color-cyan);
+  color: var(--color-cyan);
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+}
+
+.node.visited {
+  color: var(--color-text-dim);
+}
+
+/* Inventory display */
+.inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-sm);
+  margin: var(--space-md) 0;
+}
+
+.inv-slot {
+  border: var(--border-dim);
+  padding: var(--space-sm);
+  font-size: var(--font-size-sm);
+}
+
+.inv-slot .item-name {
+  color: var(--color-green);
+}
+
+.inv-slot .item-stats {
+  color: var(--color-text-dim);
+  font-size: var(--font-size-sm);
+}
+
+/* Scrollbar */
+#game-output::-webkit-scrollbar {
+  width: 6px;
+}
+
+#game-output::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+#game-output::-webkit-scrollbar-thumb {
+  background: #2a2a4a;
+}
+
+#game-output::-webkit-scrollbar-thumb:hover {
+  background: var(--color-cyan);
+}

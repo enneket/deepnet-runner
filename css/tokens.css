@@ -1,0 +1,36 @@
+:root {
+  /* Cyberpunk Palette */
+  --color-bg: #0a0a0f;
+  --color-bg-panel: #0d0d1a;
+  --color-bg-hover: #1a1a2e;
+  --color-cyan: #00ffff;
+  --color-magenta: #ff00ff;
+  --color-yellow: #ffff00;
+  --color-green: #00ff88;
+  --color-red: #ff3366;
+  --color-text: #c0c0d0;
+  --color-text-dim: #606080;
+
+  /* Typography */
+  --font-mono: 'Courier New', 'Consolas', monospace;
+  --font-size-sm: 0.85rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.75rem;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+
+  /* Borders */
+  --border-dim: 1px solid #1a1a3a;
+  --border-glow: 1px solid var(--color-cyan);
+
+  /* Transitions */
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
