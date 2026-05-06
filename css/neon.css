@@ -84,3 +84,9 @@
 .bar-glow {
   box-shadow: 0 0 8px currentColor;
 }
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .flicker, .glitch { animation: none; }
+  .cursor::after { animation: none; }
+}
