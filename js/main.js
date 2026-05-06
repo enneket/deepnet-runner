@@ -73,7 +73,7 @@ class Game {
       className: 'neon-text'
     });
     bus.emit('ui:message', {
-      text: '\u2551       DEEPNET RUNNER v1.0            \u2551',
+      text: '\u2551       DEEPNET 跑者 v1.0             \u2551',
       className: 'neon-text'
     });
     bus.emit('ui:message', {
@@ -82,11 +82,11 @@ class Game {
     });
     bus.emit('ui:message', { text: '', className: '' });
     bus.emit('ui:message', {
-      text: 'You are a Netrunner. You jack into DeepNet to breach its core.',
+      text: '你是一名网络跑者。你接入DeepNet以突破其核心。',
       className: 'event-text'
     });
     bus.emit('ui:message', {
-      text: 'Navigate the node network. Fight ICE. Collect gear. Survive.',
+      text: '穿越节点网络。对抗ICE。收集装备。活下去。',
       className: 'event-text'
     });
     bus.emit('ui:message', { text: '', className: '' });
@@ -101,7 +101,7 @@ class Game {
   _handleGameOver() {
     const choices = [
       {
-        label: '\uD83D\uDD04 Try again',
+        label: '\uD83D\uDD04 重新开始',
         action: () => {
           this._state.reset(INITIAL_STATE);
           this._renderer.renderStats();
@@ -115,13 +115,13 @@ class Game {
 
   _handleVictory() {
     bus.emit('ui:message', {
-      text: 'You have conquered DeepNet. The network is yours.',
+      text: '你已征服DeepNet。网络属于你了。',
       className: 'event-text'
     });
 
     const choices = [
       {
-        label: '\uD83D\uDD04 Play again',
+        label: '\uD83D\uDD04 再来一次',
         action: () => {
           this._state.reset(INITIAL_STATE);
           this._renderer.renderStats();

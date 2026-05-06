@@ -5,8 +5,8 @@
 export const ENEMIES = {
   sentry: {
     id: 'sentry',
-    name: 'ICE Sentry v1.0',
-    type: 'ICE / Patrol',
+    name: 'ICE哨兵 v1.0',
+    type: 'ICE / 巡逻',
     hp: 40, maxHp: 40,
     attack: 8, defense: 2,
     xpReward: 15,
@@ -14,8 +14,8 @@ export const ENEMIES = {
   },
   crawler: {
     id: 'crawler',
-    name: 'Data Crawler',
-    type: 'Malware / Swarm',
+    name: '数据爬虫',
+    type: '恶意软件 / 虫群',
     hp: 30, maxHp: 30,
     attack: 12, defense: 0,
     xpReward: 12,
@@ -23,8 +23,8 @@ export const ENEMIES = {
   },
   firewall: {
     id: 'firewall',
-    name: 'Firewall Guardian',
-    type: 'ICE / Defense',
+    name: '防火墙守卫',
+    type: 'ICE / 防御',
     hp: 80, maxHp: 80,
     attack: 10, defense: 8,
     xpReward: 35,
@@ -32,8 +32,8 @@ export const ENEMIES = {
   },
   overseer: {
     id: 'overseer',
-    name: 'Network Overseer',
-    type: 'ICE / Commander',
+    name: '网络监督者',
+    type: 'ICE / 指挥官',
     hp: 120, maxHp: 120,
     attack: 15, defense: 5,
     xpReward: 80,

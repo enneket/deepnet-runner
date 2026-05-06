@@ -32,7 +32,7 @@ export class SkillsSystem {
       });
 
       bus.emit('ui:message', {
-        text: `⬆ LEVEL UP! You are now level ${newLevel}. +1 Skill Point.`,
+        text: `⬆ 升级了！你现在是 ${newLevel} 级。+1 技能点。`,
         className: 'neon-text'
       });
 
@@ -46,13 +46,13 @@ export class SkillsSystem {
     const skillPoints = player.skillPoints || 0;
 
     bus.emit('ui:clear');
-    bus.emit('ui:message', { text: '🔮 SKILL TREE', className: 'room-title' });
-    bus.emit('ui:message', { text: `Skill Points: ${skillPoints}`, className: 'event-text' });
+    bus.emit('ui:message', { text: '🔮 技能树', className: 'room-title' });
+    bus.emit('ui:message', { text: `技能点：${skillPoints}`, className: 'event-text' });
 
     const branches = {
-      brute_force: { name: 'Brute Force', skills: [] },
-      stealth: { name: 'Stealth', skills: [] },
-      system_control: { name: 'System Control', skills: [] }
+      brute_force: { name: '暴力破解', skills: [] },
+      stealth: { name: '隐匿渗透', skills: [] },
+      system_control: { name: '系统操控', skills: [] }
     };
 
     for (const [id, skill] of Object.entries(SKILLS)) {
@@ -80,7 +80,7 @@ export class SkillsSystem {
 
         if (canUnlock) {
           choices.push({
-            label: `Unlock: ${skill.name}`,
+            label: `解锁：${skill.name}`,
             action: () => this.unlock(skill.id)
           });
         }
@@ -100,17 +100,17 @@ export class SkillsSystem {
     const skill = getSkill(skillId);
 
     if (!skill) {
-      bus.emit('ui:message', { text: 'ERROR: Skill not found.', className: 'combat-log' });
+      bus.emit('ui:message', { text: '错误：未找到技能。', className: 'combat-log' });
       return;
     }
 
     if ((player.skillPoints || 0) <= 0) {
-      bus.emit('ui:message', { text: 'No skill points available.', className: 'combat-log' });
+      bus.emit('ui:message', { text: '没有可用的技能点。', className: 'combat-log' });
       return;
     }
 
     if (skill.requires && !(player.skills || []).includes(skill.requires)) {
-      bus.emit('ui:message', { text: `Requires: ${skill.requires}`, className: 'combat-log' });
+      bus.emit('ui:message', { text: `需要：${skill.requires}`, className: 'combat-log' });
       return;
     }
 
@@ -123,7 +123,7 @@ export class SkillsSystem {
     });
 
     bus.emit('ui:message', {
-      text: `Unlocked: ${skill.name}!`,
+      text: `已解锁：${skill.name}！`,
       className: 'neon-text'
     });
 

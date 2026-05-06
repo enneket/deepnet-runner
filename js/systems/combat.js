@@ -37,7 +37,7 @@ export class CombatSystem {
     };
 
     bus.emit('ui:message', {
-      text: `⚔ COMBAT: ${this._enemy.name}`,
+      text: `⚔ 战斗：${this._enemy.name}`,
       className: 'combat-title'
     });
 
@@ -50,11 +50,11 @@ export class CombatSystem {
     const enemy = this._enemy;
 
     bus.emit('ui:message', {
-      text: `[You]  ${formatStat('HP', player.hp, player.maxHp)}  ${formatStat('RAM', player.ram, player.maxRam)}`,
+      text: `[你]  ${formatStat('HP', player.hp, player.maxHp)}  ${formatStat('RAM', player.ram, player.maxRam)}`,
       className: 'event-text'
     });
     bus.emit('ui:message', {
-      text: `[Enemy] ${formatStat('HP', enemy.hp, enemy.maxHp)}  Type: ${enemy.type}`,
+      text: `[敌人] ${formatStat('HP', enemy.hp, enemy.maxHp)}  类型：${enemy.type}`,
       className: 'combat-log'
     });
   }
@@ -64,7 +64,7 @@ export class CombatSystem {
     const choices = [];
 
     choices.push({
-      label: `⚔ Attack Protocol [${player.attack} dmg]`,
+      label: `⚔ 攻击协议 [${player.attack} 伤害]`,
       action: () => this._playerAttack()
     });
 
@@ -86,7 +86,7 @@ export class CombatSystem {
     });
     if (consumables.length > 0) {
       choices.push({
-        label: `💊 Use Item (${consumables.length} available)`,
+        label: `💊 使用物品 (${consumables.length} 可用)`,
         action: () => this._showItemChoices()
       });
     }
@@ -104,7 +104,7 @@ export class CombatSystem {
     this._enemy.hp = Math.max(0, this._enemy.hp - finalDmg);
 
     bus.emit('ui:message', {
-      text: `You strike for ${finalDmg} damage${isCrit ? ' — CRITICAL HIT!' : ''}`,
+      text: `你造成 ${finalDmg} 点伤害${isCrit ? ' — 暴击！' : ''}`,
       className: isCrit ? 'loot-text' : 'event-text'
     });
 
@@ -125,7 +125,7 @@ export class CombatSystem {
         const dmg = Math.max(1, Math.round(baseDmg) - this._enemy.defense);
         this._enemy.hp = Math.max(0, this._enemy.hp - dmg);
         bus.emit('ui:message', {
-          text: `${skill.name} deals ${dmg} damage!`,
+          text: `${skill.name} 造成 ${dmg} 点伤害！`,
           className: 'loot-text'
         });
         break;
@@ -134,7 +134,7 @@ export class CombatSystem {
         const reduction = Math.round(this._enemy.defense * skill.defenseReduction);
         this._enemy.defense -= reduction;
         bus.emit('ui:message', {
-          text: `${skill.name} reduces enemy defense by ${reduction}!`,
+          text: `${skill.name} 降低敌人防御 ${reduction} 点！`,
           className: 'event-text'
         });
         break;
@@ -143,7 +143,7 @@ export class CombatSystem {
         const heal = Math.min(skill.healAmount, player.maxHp - player.hp);
         this._state.set('player.hp', player.hp + heal);
         bus.emit('ui:message', {
-          text: `${skill.name} restores ${heal} HP!`,
+          text: `${skill.name} 恢复 ${heal} 点HP！`,
           className: 'loot-text'
         });
         break;
@@ -151,14 +151,14 @@ export class CombatSystem {
       case 'bypass': {
         if (roll(skill.bypassChance)) {
           bus.emit('ui:message', {
-            text: `${skill.name} successful! Combat bypassed!`,
+            text: `${skill.name} 成功！战斗跳过！`,
             className: 'loot-text'
           });
           this._combatVictory();
           return;
         } else {
           bus.emit('ui:message', {
-            text: `${skill.name} failed! Enemy detected you.`,
+            text: `${skill.name} 失败！敌人发现了你。`,
             className: 'combat-log'
           });
         }
@@ -184,7 +184,7 @@ export class CombatSystem {
     this._state.set('player.hp', newHp);
 
     bus.emit('ui:message', {
-      text: `${this._enemy.name} strikes for ${finalDmg} damage${isCrit ? ' — CRITICAL!' : ''}`,
+      text: `${this._enemy.name} 造成 ${finalDmg} 点伤害${isCrit ? ' — 暴击！' : ''}`,
       className: 'combat-log'
     });
 
@@ -203,7 +203,7 @@ export class CombatSystem {
     this._state.set('player.xp', currentXp + xp);
 
     bus.emit('ui:message', {
-      text: `✓ ${enemy.name} defeated! +${xp} XP`,
+      text: `✓ ${enemy.name} 被击败！+${xp} 经验值`,
       className: 'loot-text'
     });
 
@@ -212,7 +212,7 @@ export class CombatSystem {
         const inventory = this._state.get('player.inventory') || [];
         this._state.set('player.inventory', [...inventory, loot.itemId]);
         bus.emit('ui:message', {
-          text: `  💰 Loot: ${loot.itemId}`,
+          text: `  💰 战利品：${loot.itemId}`,
           className: 'loot-text'
         });
       }
@@ -222,7 +222,7 @@ export class CombatSystem {
       const layer = this._state.get('game.currentLayer');
       if (layer < 3) {
         bus.emit('ui:message', {
-          text: `🔥 FIREWALL BREACHED! Descending to Layer ${layer + 1}...`,
+          text: `🔥 防火墙已突破！正在下降到第${layer + 1}层...`,
           className: 'neon-text-magenta'
         });
         setTimeout(() => {
@@ -230,7 +230,7 @@ export class CombatSystem {
         }, 1500);
       } else {
         bus.emit('ui:message', {
-          text: '🏆 YOU HAVE REACHED THE CORE OF DEEPNET. VICTORY!',
+          text: '🏆 你已到达DEEPNET核心。胜利！',
           className: 'neon-text'
         });
         bus.emit('game:victory');
@@ -244,11 +244,11 @@ export class CombatSystem {
 
   _combatDefeat() {
     bus.emit('ui:message', {
-      text: '💀 SYSTEM CRASH. Your connection to DeepNet has been severed.',
+      text: '💀 系统崩溃。你与DeepNet的连接已断开。',
       className: 'combat-log'
     });
     bus.emit('ui:message', {
-      text: 'GAME OVER',
+      text: '游戏结束',
       className: 'neon-text-magenta'
     });
     bus.emit('game:over');
@@ -257,7 +257,7 @@ export class CombatSystem {
   _showPostCombatChoices() {
     const choices = [
       {
-        label: '→ Continue exploring',
+        label: '→ 继续探索',
         action: () => {
           bus.emit('ui:clear');
           const node = this._state.get('game.currentNode');
@@ -265,7 +265,7 @@ export class CombatSystem {
         }
       },
       {
-        label: '📦 Check inventory',
+        label: '📦 查看背包',
         action: () => bus.emit('inventory:show')
       }
     ];
@@ -287,7 +287,7 @@ export class CombatSystem {
     }
 
     choices.push({
-      label: '← Back to combat',
+      label: '← 返回战斗',
       action: () => this._showCombatChoices()
     });
 
@@ -309,12 +309,12 @@ export class CombatSystem {
     if (item.effect.hp) {
       const heal = Math.min(item.effect.hp, player.maxHp - player.hp);
       this._state.set('player.hp', player.hp + heal);
-      bus.emit('ui:message', { text: `Used ${item.name}. +${heal} HP.`, className: 'loot-text' });
+      bus.emit('ui:message', { text: `使用了 ${item.name}。+${heal} HP。`, className: 'loot-text' });
     }
     if (item.effect.ram) {
       const restore = Math.min(item.effect.ram, player.maxRam - player.ram);
       this._state.set('player.ram', player.ram + restore);
-      bus.emit('ui:message', { text: `Used ${item.name}. +${restore} RAM.`, className: 'loot-text' });
+      bus.emit('ui:message', { text: `使用了 ${item.name}。+${restore} RAM。`, className: 'loot-text' });
     }
 
     this._showCombatStatus();

@@ -94,7 +94,7 @@ export class ExplorationSystem {
         break;
       case 'entry':
         bus.emit('ui:message', {
-          text: 'Systems online. Choose your path.',
+          text: '系统上线。选择你的路径。',
           className: 'event-text'
         });
         break;
@@ -106,7 +106,7 @@ export class ExplorationSystem {
       const enemies = ['sentry', 'crawler'];
       const enemyId = pick(enemies);
       bus.emit('ui:message', {
-        text: '⚠ Hostile program detected!',
+        text: '⚠ 检测到敌对程序！',
         className: 'combat-log'
       });
       bus.emit('combat:start', { enemyId });
@@ -115,7 +115,7 @@ export class ExplorationSystem {
       const current = this._state.get('player.credits') || 0;
       this._state.set('player.credits', current + credits);
       bus.emit('ui:message', {
-        text: `💰 Found ${credits} credits in abandoned data.`,
+        text: `💰 在废弃数据中发现 ${credits} 信用点。`,
         className: 'loot-text'
       });
     }
@@ -123,7 +123,7 @@ export class ExplorationSystem {
 
   _encryptedNodeEvent() {
     bus.emit('ui:message', {
-      text: '🔒 Heavy encryption detected. Breaking through will trigger defense systems.',
+      text: '🔒 检测到重度加密。突破将触发防御系统。',
       className: 'event-text'
     });
     const tier = this._state.get('game.currentLayer');
@@ -144,14 +144,14 @@ export class ExplorationSystem {
     });
 
     bus.emit('ui:message', {
-      text: `🔧 Systems repaired. +${hpRestore} HP, +${ramRestore} RAM.`,
+      text: `🔧 系统修复中。+${hpRestore} HP, +${ramRestore} RAM。`,
       className: 'loot-text'
     });
   }
 
   _shopNodeEvent() {
     bus.emit('ui:message', {
-      text: '"Welcome, runner. See anything you like?"',
+      text: '"欢迎，跑者。看到喜欢的了吗？"',
       className: 'event-text'
     });
   }
@@ -162,11 +162,11 @@ export class ExplorationSystem {
     this._state.set('player.xp', currentXp + xp);
 
     bus.emit('ui:message', {
-      text: `📡 Data fragment decoded. +${xp} XP.`,
+      text: `📡 数据碎片解码完成。+${xp} 经验值。`,
       className: 'loot-text'
     });
     bus.emit('ui:message', {
-      text: '"The first runners called it the Deep. They said if you listened, the data would whisper back."',
+      text: '"第一批跑者称之为\'深层\'。他们说如果你倾听，数据会回响。"',
       className: 'event-text'
     });
   }
@@ -177,7 +177,7 @@ export class ExplorationSystem {
     const enemyId = bossIds[layer] || 'overseer';
 
     bus.emit('ui:message', {
-      text: '💀 CORE FIREWALL DETECTED. BRACE FOR COMBAT.',
+      text: '💀 检测到核心防火墙。准备战斗。',
       className: 'combat-log'
     });
     bus.emit('combat:start', { enemyId, isBoss: true });
@@ -204,13 +204,13 @@ export class ExplorationSystem {
 
     if (node.type === 'shop') {
       choices.push({
-        label: '🛒 Browse inventory',
+        label: '🛒 浏览商店',
         action: () => bus.emit('shop:open')
       });
     }
 
     choices.push({
-      label: '📦 Check inventory',
+      label: '📦 查看背包',
       action: () => bus.emit('inventory:show')
     });
 

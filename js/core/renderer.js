@@ -108,17 +108,17 @@ export class Renderer {
     const panel = document.createElement('div');
     panel.className = 'combat-panel neon-border';
     panel.innerHTML = `
-      <div class="combat-title">\u2694 COMBAT: ${enemy.name}</div>
+      <div class="combat-title">\u2694 战斗：${enemy.name}</div>
       <div class="combatant">
-        <div class="combatant-name player">[You]</div>
+        <div class="combatant-name player">[你]</div>
         <div>${formatStat('HP', player.hp, player.maxHp)}</div>
         <div>${formatStat('RAM', player.ram, player.maxRam)}</div>
       </div>
       <div class="combatant">
-        <div class="combatant-name enemy">[Enemy]</div>
+        <div class="combatant-name enemy">[敌人]</div>
         <div>${formatStat('HP', enemy.hp, enemy.maxHp)}</div>
         <div class="stat-bar">
-          <span class="label">Type</span>
+          <span class="label">类型</span>
           <span>${enemy.type}</span>
         </div>
       </div>
