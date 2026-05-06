@@ -16,8 +16,9 @@
   <div id="results"></div>
   <script type="module">
     import { EventBus, bus } from '../js/core/event-bus.js';
+    import { StateManager } from '../js/core/state.js';
 
-    const results = document.getElementById('results');
+    let results = document.getElementById('results');
     let passed = 0;
     let failed = 0;
 
@@ -106,6 +107,45 @@
         let threw = false;
         try { eb.emit('nonexistent'); } catch (e) { threw = true; }
         assert(!threw, 'emit on missing event does not throw');
+      });
+    });
+
+    // --- StateManager Tests ---
+
+    suite('StateManager', () => {
+      suite('get initial state', () => {
+        const sm = new StateManager({ player: { hp: 100, ram: 50 } });
+        assert(sm.get('player.hp') === 100, 'get nested value');
+        assert(sm.get('player.ram') === 50, 'get second nested value');
+      });
+
+      suite('set updates state immutably', () => {
+        const sm = new StateManager({ player: { hp: 100 } });
+        const oldState = sm.state;
+        sm.set('player.hp', 80);
+        assert(sm.get('player.hp') === 80, 'set updates value');
+        assert(oldState.player.hp === 100, 'old state is not mutated');
+      });
+
+      suite('update merges object', () => {
+        const sm = new StateManager({ player: { hp: 100, ram: 50 } });
+        sm.update({ player: { hp: 80 } });
+        assert(sm.get('player.hp') === 80, 'update merges hp');
+        assert(sm.get('player.ram') === 50, 'update preserves ram');
+      });
+
+      suite('onChange fires on state change', () => {
+        const sm = new StateManager({ player: { hp: 100 } });
+        let changed = false;
+        sm.onChange(() => { changed = true; });
+        sm.set('player.hp', 80);
+        assert(changed, 'onChange fires after set');
+      });
+
+      suite('get returns undefined for missing path', () => {
+        const sm = new StateManager({ player: { hp: 100 } });
+        assert(sm.get('player.missing') === undefined, 'missing nested returns undefined');
+        assert(sm.get('missing.path') === undefined, 'missing top-level returns undefined');
       });
     });
 
