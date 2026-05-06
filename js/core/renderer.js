@@ -58,6 +58,25 @@ export class Renderer {
   }
 
   /**
+   * Add message with typewriter effect
+   */
+  addMessageAnimated({ text, className = '' }, delay = 30) {
+    const el = document.createElement('div');
+    el.className = className;
+    this._output.appendChild(el);
+
+    let i = 0;
+    const interval = setInterval(() => {
+      el.textContent = text.slice(0, i + 1);
+      i++;
+      this._output.scrollTop = this._output.scrollHeight;
+      if (i >= text.length) {
+        clearInterval(interval);
+      }
+    }, delay);
+  }
+
+  /**
    * Clear the output area
    */
   clearOutput() {

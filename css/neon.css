@@ -85,8 +85,41 @@
   box-shadow: 0 0 8px currentColor;
 }
 
+/* Screen shake on damage */
+@keyframes shake {
+  0%, 100% { transform: translate(0); }
+  25% { transform: translate(-4px, 2px); }
+  50% { transform: translate(4px, -2px); }
+  75% { transform: translate(-2px, 4px); }
+}
+
+.shake {
+  animation: shake 0.3s ease;
+}
+
+/* Damage flash */
+@keyframes damage-flash {
+  0% { background: rgba(255, 51, 102, 0.3); }
+  100% { background: transparent; }
+}
+
+.damage-flash {
+  animation: damage-flash 0.5s ease;
+}
+
+/* Level up glow pulse */
+@keyframes level-up-glow {
+  0% { box-shadow: 0 0 5px var(--color-cyan); }
+  50% { box-shadow: 0 0 30px var(--color-cyan), 0 0 60px var(--color-magenta); }
+  100% { box-shadow: 0 0 5px var(--color-cyan); }
+}
+
+.level-up {
+  animation: level-up-glow 1s ease;
+}
+
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
-  .flicker, .glitch { animation: none; }
+  .flicker, .glitch, .shake, .damage-flash, .level-up { animation: none; }
   .cursor::after { animation: none; }
 }
