@@ -51,7 +51,6 @@ class Game {
     this._skills = new SkillsSystem(this._state);
 
     bus.on('game:over', () => this._handleGameOver());
-    bus.on('game:victory', () => this._handleVictory());
 
     // Re-render on language change
     i18n.onChange(() => {
@@ -137,25 +136,6 @@ class Game {
     bus.emit('ui:choices', choices);
   }
 
-  _handleVictory() {
-    bus.emit('ui:message', {
-      text: i18n.t('game.victory'),
-      className: 'event-text'
-    });
-
-    const choices = [
-      {
-        label: i18n.t('game.playAgain'),
-        action: () => {
-          this._state.reset(INITIAL_STATE);
-          this._renderer.renderStats();
-          bus.emit('ui:clear');
-          bus.emit('exploration:enterLayer', 1);
-        }
-      }
-    ];
-    bus.emit('ui:choices', choices);
-  }
 }
 
 const game = new Game();

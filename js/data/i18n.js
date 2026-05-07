@@ -145,6 +145,10 @@ export const TRANSLATIONS = {
     'layer.4.desc': '量子加密的虚拟空间。现实与数据的界限模糊。',
     'layer.5.name': '扇区-5：深渊',
     'layer.5.desc': 'DeepNet的最深处。只有传说中的跑者到达过这里。',
+    'layer.6.name': '扇区-6：神经中枢',
+    'layer.6.desc': 'DeepNet的思维层。数据以神经脉冲的形式流动，意识与代码融为一体。',
+    'layer.7.name': '扇区-7：创世纪',
+    'layer.7.desc': 'DeepNet的起源之地。所有数据从这里诞生，也将在这里终结。',
 
     // Layer 1 nodes
     'node.entry.name': '接入点Alpha',
@@ -228,11 +232,53 @@ export const TRANSLATIONS = {
     'node.abyss_core.name': '深渊核心',
     'node.abyss_core.desc': 'DeepNet的心脏。所有数据的起源和终结。这是最终的挑战。',
 
+    // Layer 6 nodes
+    'node.neural_entry.name': '神经接入点',
+    'node.neural_entry.desc': '你进入DeepNet的思维层。数据以神经脉冲的形式在你周围流动。',
+    'node.synapse_link.name': '突触链接',
+    'node.synapse_link.desc': '神经元数据在这里形成复杂的连接。每一个脉冲都携带着信息。',
+    'node.memory_fragments.name': '记忆碎片',
+    'node.memory_fragments.desc': 'DeepNet早期用户的数据残留。他们的记忆已经融入了网络。',
+    'node.neural_firewall.name': '神经防火墙',
+    'node.neural_firewall.desc': '基于神经网络的防御系统。它能学习你的攻击模式。',
+    'node.cortex_gate.name': '皮层之门',
+    'node.cortex_gate.desc': '通往核心的最后一道屏障。神经脉冲在这里汇聚成洪流。',
+    'node.neural_repair.name': '神经修复站',
+    'node.neural_repair.desc': '一个稳定的神经节点。系统可以在这里重新校准。',
+    'node.neural_market.name': '神经交易所',
+    'node.neural_market.desc': '"思维即商品。在这里，你的每一个念头都有价格。"',
+    'node.neural_core.name': '神经核心',
+    'node.neural_core.desc': 'DeepNet的思维中心。神经脉冲在这里汇聚成一个巨大的意识体。',
+
+    // Layer 7 nodes
+    'node.genesis_entry.name': '创世入口',
+    'node.genesis_entry.desc': '你到达了DeepNet的起源之地。原始数据流如同星河般在你面前展开。',
+    'node.origin_stream.name': '源流',
+    'node.origin_stream.desc': 'DeepNet最原始的数据流。一切从这里开始。',
+    'node.code_matrix.name': '代码矩阵',
+    'node.code_matrix.desc': '构成DeepNet基础代码的矩阵。它是如此复杂，以至于产生了自我意识。',
+    'node.genesis_fragment.name': '创世碎片',
+    'node.genesis_fragment.desc': '一个蕴含着DeepNet原始代码的数据碎片。解码它可能揭示一切的真相。',
+    'node.prime_firewall.name': '原初防火墙',
+    'node.prime_firewall.desc': 'DeepNet最强大的防御系统。它是整个网络的守护者。',
+    'node.origin_lock.name': '起源之锁',
+    'node.origin_lock.desc': '锁住DeepNet核心的最后一道封印。只有最强的跑者才能打开它。',
+    'node.genesis_repair.name': '创世修复站',
+    'node.genesis_repair.desc': '一个蕴含着原始代码力量的修复节点。系统可以在这里完全恢复。',
+    'node.genesis_market.name': '创世交易所',
+    'node.genesis_market.desc': '"在起源之地，一切皆有可能。但代价也是最高的。"',
+    'node.genesis_core.name': '创世核心',
+    'node.genesis_core.desc': 'DeepNet的真正核心。所有数据的起源，所有代码的归宿。这是最后的挑战。',
+
     // Enemy translations
     'enemy.quantum_guardian': '量子守卫',
     'enemy.type.quantum_guardian': 'ICE / 量子态',
     'enemy.abyss_lord': '深渊领主',
     'enemy.type.abyss_lord': 'ICE / 深渊',
+    'enemy.neural_sovereign': '神经主权者',
+    'enemy.type.neural_sovereign': 'ICE / 神经网络',
+    'enemy.deepnet_prime': 'DeepNet原初体',
+    'enemy.type.deepnet_prime': 'ICE / 创世',
 
     // Language toggle
     'lang.switch': 'EN',
@@ -382,6 +428,10 @@ export const TRANSLATIONS = {
     'layer.4.desc': 'Quantum-encrypted virtual space. The line between reality and data blurs.',
     'layer.5.name': 'SECTOR-5: The Abyss',
     'layer.5.desc': 'The deepest layer of DeepNet. Only legendary runners have reached here.',
+    'layer.6.name': 'SECTOR-6: Neural Nexus',
+    'layer.6.desc': 'The mind-layer of DeepNet. Data flows as neural impulses — consciousness and code merge.',
+    'layer.7.name': 'SECTOR-7: Genesis',
+    'layer.7.desc': 'The origin point of DeepNet. All data is born here, and all data ends here.',
 
     // Layer 1 nodes
     'node.entry.name': 'Access Point Alpha',
@@ -465,14 +515,218 @@ export const TRANSLATIONS = {
     'node.abyss_core.name': 'Abyss Core',
     'node.abyss_core.desc': 'The heart of DeepNet. The origin and end of all data. This is the final challenge.',
 
+    // Layer 6 nodes
+    'node.neural_entry.name': 'Neural Access Point',
+    'node.neural_entry.desc': 'You enter the mind-layer of DeepNet. Data flows as neural impulses around you.',
+    'node.synapse_link.name': 'Synapse Link',
+    'node.synapse_link.desc': 'Neural data forms complex connections here. Every pulse carries information.',
+    'node.memory_fragments.name': 'Memory Fragments',
+    'node.memory_fragments.desc': 'Data remnants from DeepNet\'s early users. Their memories have merged with the network.',
+    'node.neural_firewall.name': 'Neural Firewall',
+    'node.neural_firewall.desc': 'A neural-network-based defense system. It learns your attack patterns.',
+    'node.cortex_gate.name': 'Cortex Gate',
+    'node.cortex_gate.desc': 'The final barrier before the core. Neural pulses converge here into a torrent.',
+    'node.neural_repair.name': 'Neural Repair Station',
+    'node.neural_repair.desc': 'A stable neural node. Systems can recalibrate here.',
+    'node.neural_market.name': 'Neural Exchange',
+    'node.neural_market.desc': '"Thought is commodity. Here, every idea has a price."',
+    'node.neural_core.name': 'Neural Core',
+    'node.neural_core.desc': 'The mind-center of DeepNet. Neural pulses converge into a vast consciousness.',
+
+    // Layer 7 nodes
+    'node.genesis_entry.name': 'Genesis Entry',
+    'node.genesis_entry.desc': 'You reach the origin of DeepNet. Raw data streams unfold before you like a galaxy.',
+    'node.origin_stream.name': 'Origin Stream',
+    'node.origin_stream.desc': 'The most primal data flow of DeepNet. Everything starts here.',
+    'node.code_matrix.name': 'Code Matrix',
+    'node.code_matrix.desc': 'The matrix forming DeepNet\'s foundational code. It is so complex it became self-aware.',
+    'node.genesis_fragment.name': 'Genesis Fragment',
+    'node.genesis_fragment.desc': 'A data fragment containing DeepNet\'s original code. Decoding it may reveal the truth of everything.',
+    'node.prime_firewall.name': 'Prime Firewall',
+    'node.prime_firewall.desc': 'DeepNet\'s most powerful defense system. It is the guardian of the entire network.',
+    'node.origin_lock.name': 'Origin Lock',
+    'node.origin_lock.desc': 'The final seal on DeepNet\'s core. Only the strongest runners can break it.',
+    'node.genesis_repair.name': 'Genesis Repair Station',
+    'node.genesis_repair.desc': 'A repair node infused with primal code. Systems can fully restore here.',
+    'node.genesis_market.name': 'Genesis Exchange',
+    'node.genesis_market.desc': '"At the origin, all things are possible. But the price is the highest."',
+    'node.genesis_core.name': 'Genesis Core',
+    'node.genesis_core.desc': 'The true core of DeepNet. The origin of all data, the end of all code. This is the final challenge.',
+
     // Enemy translations
     'enemy.quantum_guardian': 'Quantum Guardian',
     'enemy.type.quantum_guardian': 'ICE / Quantum',
     'enemy.abyss_lord': 'Abyss Lord',
     'enemy.type.abyss_lord': 'ICE / Abyss',
+    'enemy.neural_sovereign': 'Neural Sovereign',
+    'enemy.type.neural_sovereign': 'ICE / Neural',
+    'enemy.deepnet_prime': 'DeepNet Prime',
+    'enemy.type.deepnet_prime': 'ICE / Genesis',
 
     // Language toggle
     'lang.switch': '中',
     'lang.current': 'English'
+  }
+};
+
+/**
+ * Procedural content pools for infinite layers.
+ * Indexed by (layerNum - 1) % 7 to cycle themes.
+ */
+export const LAYER_THEMES = [
+  { zh: '外围防线', en: 'Outer Perimeter' },
+  { zh: '数据枢纽', en: 'Data Nexus' },
+  { zh: '深层', en: 'The Deep' },
+  { zh: '量子核心', en: 'Quantum Core' },
+  { zh: '深渊', en: 'The Abyss' },
+  { zh: '神经中枢', en: 'Neural Nexus' },
+  { zh: '创世纪', en: 'Genesis' }
+];
+
+export const PROC_NODES = {
+  entry: {
+    names: {
+      zh: ['接入点', '下行通道', '裂隙入口', '数据之门', '深层通道', '下行端口', '渗透点'],
+      desc: [
+        '你进入第{N}层。数据流在周围涌动。',
+        '虚拟空间在这里扭曲。前方是未知。',
+        '下行完成。第{N}层在你面前展开。',
+        '你穿过防火墙的缝隙。新的扇区出现了。',
+        '连接已建立。第{N}层的节点网络闪烁着危险的光芒。'
+      ]
+    },
+    en: {
+      names: ['Access Point', 'Descent Channel', 'Rift Entry', 'Data Gate', 'Deep Passage', 'Downlink Port', 'Breach Point'],
+      desc: [
+        'You enter Layer {N}. Data streams surge around you.',
+        'Virtual space warps here. The unknown lies ahead.',
+        'Descent complete. Layer {N} unfolds before you.',
+        'You slip through a firewall gap. A new sector appears.',
+        'Connection established. Layer {N}\'s node network flickers with danger.'
+      ]
+    }
+  },
+  data: {
+    names: {
+      zh: ['数据缓存', '废弃节点', '信息流', '数据漩涡', '残余数据', '信号源', '数据碎片', '信息风暴'],
+      desc: [
+        '闪烁的数据碎片漂浮在损坏的扇区中。',
+        '旧的数据残片在这里堆积。有东西在移动。',
+        '数据流在这里减速，形成了一个信息池。',
+        '损坏的代码碎片在虚空中旋转。',
+        '一个充满废弃数据的节点。机会与危险并存。'
+      ]
+    },
+    en: {
+      names: ['Data Cache', 'Abandoned Node', 'Info Stream', 'Data Vortex', 'Residual Data', 'Signal Source', 'Data Fragments', 'Info Storm'],
+      desc: [
+        'Flickering data fragments drift through a corrupted sector.',
+        'Old data remnants pile up here. Something moves.',
+        'Data streams slow here, forming an information pool.',
+        'Corrupted code fragments spin in the void.',
+        'A node full of discarded data. Opportunity and danger coexist.'
+      ]
+    }
+  },
+  encrypted: {
+    names: {
+      zh: ['加密扇区', '封锁区域', '防御节点', '安全屏障', '黑ICE区域', '加密迷宫', '数据要塞'],
+      desc: [
+        '重度加密。突破会触发防御系统。',
+        '军事级加密。这里的数据被严密守护。',
+        '检测到主动防御程序。准备战斗。',
+        '加密层在这里叠加了数十重。',
+        '黑ICE。已知最危险的防御程序。'
+      ]
+    },
+    en: {
+      names: ['Encrypted Sector', 'Locked Zone', 'Defense Node', 'Security Barrier', 'Black ICE Zone', 'Crypto Labyrinth', 'Data Fortress'],
+      desc: [
+        'Heavy encryption. Breaking through triggers defense systems.',
+        'Military-grade encryption. Data here is heavily guarded.',
+        'Active defense programs detected. Brace for combat.',
+        'Dozens of encryption layers stack here.',
+        'Black ICE. The most dangerous defense programs known.'
+      ]
+    }
+  },
+  repair: {
+    names: {
+      zh: ['修复节点', '维护舱', '恢复站', '安全室', '缓存修复', '系统诊所', '急救站'],
+      desc: [
+        '一个稳定的数据井。你可以在这里修复系统。',
+        '旧的维护节点。系统可以在这里修补。',
+        '一个隐藏的安全室。恢复机会。',
+        '紧急修复协议已激活。',
+        '系统诊断完成。开始修复。'
+      ]
+    },
+    en: {
+      names: ['Repair Node', 'Maintenance Bay', 'Recovery Station', 'Safe Room', 'Cache Repair', 'System Clinic', 'First Aid Station'],
+      desc: [
+        'A stable data well. You can restore your systems here.',
+        'An old maintenance node. Systems can be patched here.',
+        'A hidden safe room. A chance to recover.',
+        'Emergency repair protocols activated.',
+        'System diagnostics complete. Beginning repairs.'
+      ]
+    }
+  },
+  shop: {
+    names: {
+      zh: ['黑市终端', '暗影市场', '交易所', '数据商人', '走私者', '地下市场', '灰色交易'],
+      desc: [
+        '"欢迎，跑者。看到喜欢的了吗？"',
+        '"优质商品给优质跑者。"',
+        '"你走了很远。我的价格反映了风险。"',
+        '"量子商品，量子价格。"',
+        '"在深处，一切都有价格。"'
+      ]
+    },
+    en: {
+      names: ['Black Market Terminal', 'Shadow Market', 'Exchange', 'Data Dealer', 'Smuggler', 'Underground Market', 'Gray Trade'],
+      desc: [
+        '"Welcome, runner. See anything you like?"',
+        '"Premium goods for premium runners."',
+        '"You\'ve come far. My prices reflect the risk."',
+        '"Quantum goods, quantum prices."',
+        '"In the depths, everything has a price."'
+      ]
+    }
+  },
+  core: {
+    names: {
+      zh: ['核心网关', '核心枢纽', '核心', '量子核心', '深渊核心', '神经核心', '创世核心', '终极核心', '深渊之门', '虚空核心'],
+      desc: [
+        '通往下一层的防火墙在你面前脉动。',
+        '核心防火墙矗立。它的守卫古老而强大。',
+        'DeepNet的心脏。终极ICE程序在等待。',
+        '核心在所有可能的状态中等待着你。',
+        'DeepNet的真正核心。这是最后的挑战。',
+        '一个巨大的ICE程序守卫着通往下层的通道。'
+      ]
+    },
+    en: {
+      names: ['Core Gateway', 'Core Nexus', 'THE CORE', 'Quantum Core', 'Abyss Core', 'Neural Core', 'Genesis Core', 'Ultimate Core', 'Abyss Gate', 'Void Core'],
+      desc: [
+        'The firewall to the next layer pulses before you.',
+        'The core firewall looms. Its guardian is ancient and powerful.',
+        'The heart of DeepNet. The ultimate ICE program awaits.',
+        'The core awaits you in all possible states.',
+        'The true core of DeepNet. This is the final challenge.',
+        'A massive ICE program guards the path to the next layer.'
+      ]
+    }
+  }
+};
+
+export const PROC_BOSSES = {
+  names: {
+    zh: ['网络监督者', '量子守卫', '深渊领主', '神经主权者', 'DeepNet原初体', '虚空行者', '数据暴君', '代码之王', '暗影主宰', '终极守护者'],
+    en: ['Network Overseer', 'Quantum Guardian', 'Abyss Lord', 'Neural Sovereign', 'DeepNet Prime', 'Void Walker', 'Data Tyrant', 'Code King', 'Shadow Master', 'Ultimate Guardian']
+  },
+  types: {
+    zh: ['ICE / 指挥官', 'ICE / 量子态', 'ICE / 深渊', 'ICE / 神经网络', 'ICE / 创世', 'ICE / 虚空', 'ICE / 暴政', 'ICE / 统治', 'ICE / 暗影', 'ICE / 终极'],
+    en: ['ICE / Commander', 'ICE / Quantum', 'ICE / Abyss', 'ICE / Neural', 'ICE / Genesis', 'ICE / Void', 'ICE / Tyrant', 'ICE / Dominion', 'ICE / Shadow', 'ICE / Ultimate']
   }
 };

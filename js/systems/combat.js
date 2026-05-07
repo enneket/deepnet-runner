@@ -228,21 +228,13 @@ export class CombatSystem {
 
     if (enemy.isBoss) {
       const layer = this._state.get('game.currentLayer');
-      if (layer < 5) {
-        bus.emit('ui:message', {
-          text: i18n.t('explore.firewallBreach', layer + 1),
-          className: 'neon-text-magenta'
-        });
-        setTimeout(() => {
-          bus.emit('exploration:enterLayer', layer + 1);
-        }, 1500);
-      } else {
-        bus.emit('ui:message', {
-          text: i18n.t('explore.victory'),
-          className: 'neon-text'
-        });
-        bus.emit('game:victory');
-      }
+      bus.emit('ui:message', {
+        text: i18n.t('explore.firewallBreach', layer + 1),
+        className: 'neon-text-magenta'
+      });
+      setTimeout(() => {
+        bus.emit('exploration:enterLayer', layer + 1);
+      }, 1500);
     } else {
       this._showPostCombatChoices();
     }

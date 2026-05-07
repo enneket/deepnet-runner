@@ -1,3 +1,6 @@
+import { PROC_BOSSES } from './i18n.js';
+import { randInt } from '../utils/random.js';
+
 /**
  * Enemy definitions
  * Each enemy has: nameKey, typeKey (i18n keys), hp, maxHp, attack, defense, xpReward, lootTable
@@ -56,16 +59,63 @@ export const ENEMIES = {
     attack: 25, defense: 15,
     xpReward: 250,
     lootTable: [{ itemId: 'overclock_chip', chance: 1.0 }]
+  },
+  neural_sovereign: {
+    id: 'neural_sovereign',
+    nameKey: 'enemy.neural_sovereign',
+    typeKey: 'enemy.type.neural_sovereign',
+    hp: 400, maxHp: 400,
+    attack: 30, defense: 20,
+    xpReward: 350,
+    lootTable: [{ itemId: 'overclock_chip', chance: 1.0 }]
+  },
+  deepnet_prime: {
+    id: 'deepnet_prime',
+    nameKey: 'enemy.deepnet_prime',
+    typeKey: 'enemy.type.deepnet_prime',
+    hp: 500, maxHp: 500,
+    attack: 35, defense: 25,
+    xpReward: 500,
+    lootTable: [{ itemId: 'overclock_chip', chance: 1.0 }]
   }
 };
 
 export function getEnemiesForTier(tier) {
-  return Object.values(ENEMIES).filter(e => {
-    if (tier === 1) return ['sentry', 'crawler'].includes(e.id);
-    if (tier === 2) return ['sentry', 'crawler', 'firewall'].includes(e.id);
-    if (tier === 3) return ['sentry', 'crawler', 'firewall'].includes(e.id);
-    if (tier === 4) return ['firewall', 'quantum_guardian'].includes(e.id);
-    if (tier === 5) return ['firewall', 'abyss_lord'].includes(e.id);
-    return true;
-  });
+  // Always return firewall + generated boss for any tier
+  const boss = generateBoss(tier);
+  return [
+    ENEMIES.firewall,
+    { ...boss, id: `_gen_boss_${tier}` }
+  ];
+}
+
+/**
+ * Generate a boss for layers > 7. Stats scale with layer number.
+ */
+export function generateBoss(layerNum) {
+  const themeIdx = (layerNum - 1) % 10;
+  const nameKey = `_proc.boss.name.${layerNum}`;
+  const typeKey = `_proc.boss.type.${layerNum}`;
+
+  return {
+    id: `_gen_boss_${layerNum}`,
+    nameKey,
+    typeKey,
+    hp: 120 + (layerNum - 1) * 80,
+    maxHp: 120 + (layerNum - 1) * 80,
+    attack: 15 + (layerNum - 1) * 5,
+    defense: 5 + (layerNum - 1) * 4,
+    xpReward: 80 + (layerNum - 1) * 50,
+    lootTable: [{ itemId: 'overclock_chip', chance: 1.0 }],
+    _procTexts: {
+      [nameKey]: {
+        zh: PROC_BOSSES.names.zh[themeIdx] || `第${layerNum}层守护者`,
+        en: PROC_BOSSES.names.en[themeIdx] || `Layer ${layerNum} Guardian`
+      },
+      [typeKey]: {
+        zh: PROC_BOSSES.types.zh[themeIdx] || 'ICE / 未知',
+        en: PROC_BOSSES.types.en[themeIdx] || 'ICE / Unknown'
+      }
+    }
+  };
 }

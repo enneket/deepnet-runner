@@ -1,6 +1,6 @@
 import { bus } from '../core/event-bus.js';
 import { getLayer } from '../data/layers.js';
-import { ENEMIES } from '../data/enemies.js';
+import { ENEMIES, generateBoss } from '../data/enemies.js';
 import { getItem } from '../data/items.js';
 import { pick, roll, randInt } from '../utils/random.js';
 import { i18n } from './i18n.js';
@@ -27,6 +27,11 @@ export class ExplorationSystem {
     if (!this._currentLayer) {
       bus.emit('ui:message', { text: 'ERROR: Layer not found.', className: 'combat-log' });
       return;
+    }
+
+    // Register procedural texts if this is a generated layer
+    if (this._currentLayer._procTexts) {
+      i18n.registerProc(this._currentLayer._procTexts);
     }
 
     this._state.update({
@@ -174,14 +179,19 @@ export class ExplorationSystem {
 
   _coreNodeEvent() {
     const layer = this._state.get('game.currentLayer');
-    const bossIds = { 1: 'overseer', 2: 'overseer', 3: 'overseer', 4: 'quantum_guardian', 5: 'abyss_lord' };
-    const enemyId = bossIds[layer] || 'overseer';
+
+    // Generate boss and register its proc texts
+    const boss = generateBoss(layer);
+    if (boss._procTexts) {
+      i18n.registerProc(boss._procTexts);
+    }
+    ENEMIES[boss.id] = boss;
 
     bus.emit('ui:message', {
       text: i18n.t('explore.coreWarning'),
       className: 'combat-log'
     });
-    bus.emit('combat:start', { enemyId, isBoss: true });
+    bus.emit('combat:start', { enemyId: boss.id, isBoss: true });
   }
 
   _showChoices(node) {

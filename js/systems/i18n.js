@@ -8,6 +8,7 @@ class I18nManager {
   constructor() {
     this._lang = 'zh';
     this._listeners = new Set();
+    this._procTexts = {};
   }
 
   get lang() {
@@ -42,11 +43,23 @@ class I18nManager {
    * @returns {string}
    */
   t(key, ...args) {
-    let text = TRANSLATIONS[this._lang]?.[key] || TRANSLATIONS['zh']?.[key] || key;
+    let text = this._procTexts[key]?.[this._lang]
+      || this._procTexts[key]?.['zh']
+      || TRANSLATIONS[this._lang]?.[key]
+      || TRANSLATIONS['zh']?.[key]
+      || key;
     for (let i = 0; i < args.length; i++) {
       text = text.replace(`{${i}}`, args[i]);
     }
     return text;
+  }
+
+  /**
+   * Register procedural text entries for generated layers
+   * @param {Object} texts - Map of key -> { zh, en }
+   */
+  registerProc(texts) {
+    Object.assign(this._procTexts, texts);
   }
 
   /**

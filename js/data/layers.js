@@ -1,3 +1,6 @@
+import { pick, randInt } from '../utils/random.js';
+import { PROC_NODES, LAYER_THEMES } from './i18n.js';
+
 /**
  * Layer definitions - each layer is a graph of nodes
  * Node names and descriptions use i18n translation keys
@@ -258,9 +261,255 @@ export const LAYERS = {
       }
     },
     startNode: 'entry'
+  },
+  6: {
+    id: 6,
+    nameKey: 'layer.6.name',
+    descKey: 'layer.6.desc',
+    nodes: {
+      entry: {
+        id: 'entry', type: 'entry',
+        nameKey: 'node.neural_entry.name',
+        descKey: 'node.neural_entry.desc',
+        connections: ['data_6a', 'data_6b']
+      },
+      data_6a: {
+        id: 'data_6a', type: 'data',
+        nameKey: 'node.synapse_link.name',
+        descKey: 'node.synapse_link.desc',
+        connections: ['encrypted_6a', 'repair_6']
+      },
+      data_6b: {
+        id: 'data_6b', type: 'data',
+        nameKey: 'node.memory_fragments.name',
+        descKey: 'node.memory_fragments.desc',
+        connections: ['encrypted_6b', 'shop_6']
+      },
+      encrypted_6a: {
+        id: 'encrypted_6a', type: 'encrypted',
+        nameKey: 'node.neural_firewall.name',
+        descKey: 'node.neural_firewall.desc',
+        connections: ['core_6']
+      },
+      encrypted_6b: {
+        id: 'encrypted_6b', type: 'encrypted',
+        nameKey: 'node.cortex_gate.name',
+        descKey: 'node.cortex_gate.desc',
+        connections: ['core_6']
+      },
+      repair_6: {
+        id: 'repair_6', type: 'repair',
+        nameKey: 'node.neural_repair.name',
+        descKey: 'node.neural_repair.desc',
+        connections: ['core_6']
+      },
+      shop_6: {
+        id: 'shop_6', type: 'shop',
+        nameKey: 'node.neural_market.name',
+        descKey: 'node.neural_market.desc',
+        connections: ['core_6']
+      },
+      core_6: {
+        id: 'core_6', type: 'core',
+        nameKey: 'node.neural_core.name',
+        descKey: 'node.neural_core.desc',
+        connections: []
+      }
+    },
+    startNode: 'entry'
+  },
+  7: {
+    id: 7,
+    nameKey: 'layer.7.name',
+    descKey: 'layer.7.desc',
+    nodes: {
+      entry: {
+        id: 'entry', type: 'entry',
+        nameKey: 'node.genesis_entry.name',
+        descKey: 'node.genesis_entry.desc',
+        connections: ['data_7a', 'data_7b']
+      },
+      data_7a: {
+        id: 'data_7a', type: 'data',
+        nameKey: 'node.origin_stream.name',
+        descKey: 'node.origin_stream.desc',
+        connections: ['encrypted_7a', 'fragment_7']
+      },
+      data_7b: {
+        id: 'data_7b', type: 'data',
+        nameKey: 'node.code_matrix.name',
+        descKey: 'node.code_matrix.desc',
+        connections: ['encrypted_7b', 'repair_7']
+      },
+      fragment_7: {
+        id: 'fragment_7', type: 'fragment',
+        nameKey: 'node.genesis_fragment.name',
+        descKey: 'node.genesis_fragment.desc',
+        connections: ['shop_7']
+      },
+      encrypted_7a: {
+        id: 'encrypted_7a', type: 'encrypted',
+        nameKey: 'node.prime_firewall.name',
+        descKey: 'node.prime_firewall.desc',
+        connections: ['core_7']
+      },
+      encrypted_7b: {
+        id: 'encrypted_7b', type: 'encrypted',
+        nameKey: 'node.origin_lock.name',
+        descKey: 'node.origin_lock.desc',
+        connections: ['core_7']
+      },
+      repair_7: {
+        id: 'repair_7', type: 'repair',
+        nameKey: 'node.genesis_repair.name',
+        descKey: 'node.genesis_repair.desc',
+        connections: ['core_7']
+      },
+      shop_7: {
+        id: 'shop_7', type: 'shop',
+        nameKey: 'node.genesis_market.name',
+        descKey: 'node.genesis_market.desc',
+        connections: ['core_7']
+      },
+      core_7: {
+        id: 'core_7', type: 'core',
+        nameKey: 'node.genesis_core.name',
+        descKey: 'node.genesis_core.desc',
+        connections: []
+      }
+    },
+    startNode: 'entry'
   }
 };
 
 export function getLayer(num) {
-  return LAYERS[num] ? structuredClone(LAYERS[num]) : null;
+  if (num < 1) return null;
+  return generateLayer(num);
+}
+
+/**
+ * Procedurally generate a layer for n > 7.
+ * Cycles through 7 themes, scales node count.
+ */
+function generateLayer(n) {
+  const themeIdx = (n - 1) % 7;
+  const theme = LAYER_THEMES[themeIdx];
+  const pool = PROC_NODES;
+
+  // Pick themed names/descs for this layer
+  const pickFrom = (arr) => arr[randInt(0, arr.length - 1)];
+  const fillDesc = (txt) => txt.replace('{N}', n);
+
+  // Node count: 6-8, slightly increasing with layer
+  const extraDataNodes = Math.min(n > 14 ? 2 : n > 7 ? 1 : 0, 2);
+
+  // Build node IDs
+  const dataIds = ['data_a', 'data_b'];
+  for (let i = 0; i < extraDataNodes; i++) {
+    dataIds.push('data_' + String.fromCharCode(99 + i)); // c, d, ...
+  }
+
+  const encryptedIds = ['encrypted_a'];
+  if (n > 10) encryptedIds.push('encrypted_b');
+
+  const nodes = {};
+
+  // Entry node
+  nodes.entry = {
+    id: 'entry',
+    type: 'entry',
+    nameKey: `_proc.entry.name.${n}`,
+    descKey: `_proc.entry.desc.${n}`,
+    connections: dataIds.slice(0, 2)
+  };
+
+  // Store proc text on the layer object (consumed by i18n at runtime)
+  const procTexts = {};
+  procTexts[`_proc.entry.name.${n}`] = { zh: pickFrom(pool.entry.names.zh), en: pickFrom(pool.entry.en.names) };
+  procTexts[`_proc.entry.desc.${n}`] = { zh: fillDesc(pickFrom(pool.entry.names.desc)), en: fillDesc(pickFrom(pool.entry.en.desc)) };
+
+  // Data nodes
+  const midNodes = [...encryptedIds, 'repair', 'shop'];
+  for (let i = 0; i < dataIds.length; i++) {
+    const id = dataIds[i];
+    const connections = [];
+    // Connect to a random subset of mid nodes
+    if (i === 0) {
+      connections.push(encryptedIds[0], 'repair');
+    } else if (i === 1) {
+      connections.push(encryptedIds[encryptedIds.length - 1], 'shop');
+    } else {
+      connections.push(midNodes[randInt(0, midNodes.length - 1)]);
+    }
+    nodes[id] = {
+      id,
+      type: 'data',
+      nameKey: `_proc.data.name.${n}_${id}`,
+      descKey: `_proc.data.desc.${n}_${id}`,
+      connections
+    };
+    procTexts[`_proc.data.name.${n}_${id}`] = { zh: pickFrom(pool.data.names.zh), en: pickFrom(pool.data.en.names) };
+    procTexts[`_proc.data.desc.${n}_${id}`] = { zh: pickFrom(pool.data.names.desc), en: pickFrom(pool.data.en.desc) };
+  }
+
+  // Encrypted nodes
+  for (const id of encryptedIds) {
+    nodes[id] = {
+      id,
+      type: 'encrypted',
+      nameKey: `_proc.encrypted.name.${n}_${id}`,
+      descKey: `_proc.encrypted.desc.${n}_${id}`,
+      connections: ['core']
+    };
+    procTexts[`_proc.encrypted.name.${n}_${id}`] = { zh: pickFrom(pool.encrypted.names.zh), en: pickFrom(pool.encrypted.en.names) };
+    procTexts[`_proc.encrypted.desc.${n}_${id}`] = { zh: pickFrom(pool.encrypted.names.desc), en: pickFrom(pool.encrypted.en.desc) };
+  }
+
+  // Repair node
+  nodes.repair = {
+    id: 'repair',
+    type: 'repair',
+    nameKey: `_proc.repair.name.${n}`,
+    descKey: `_proc.repair.desc.${n}`,
+    connections: ['core']
+  };
+  procTexts[`_proc.repair.name.${n}`] = { zh: pickFrom(pool.repair.names.zh), en: pickFrom(pool.repair.en.names) };
+  procTexts[`_proc.repair.desc.${n}`] = { zh: pickFrom(pool.repair.names.desc), en: pickFrom(pool.repair.en.desc) };
+
+  // Shop node
+  nodes.shop = {
+    id: 'shop',
+    type: 'shop',
+    nameKey: `_proc.shop.name.${n}`,
+    descKey: `_proc.shop.desc.${n}`,
+    connections: ['core']
+  };
+  procTexts[`_proc.shop.name.${n}`] = { zh: pickFrom(pool.shop.names.zh), en: pickFrom(pool.shop.en.names) };
+  procTexts[`_proc.shop.desc.${n}`] = { zh: pickFrom(pool.shop.names.desc), en: pickFrom(pool.shop.en.desc) };
+
+  // Core node
+  const coreName = pickFrom(pool.core.names.zh);
+  const coreNameEn = pickFrom(pool.core.en.names);
+  nodes.core = {
+    id: 'core',
+    type: 'core',
+    nameKey: `_proc.core.name.${n}`,
+    descKey: `_proc.core.desc.${n}`,
+    connections: []
+  };
+  procTexts[`_proc.core.name.${n}`] = { zh: coreName, en: coreNameEn };
+  procTexts[`_proc.core.desc.${n}`] = { zh: pickFrom(pool.core.names.desc), en: pickFrom(pool.core.en.desc) };
+
+  return {
+    id: n,
+    nameKey: `_proc.layer.name.${n}`,
+    descKey: `_proc.layer.desc.${n}`,
+    nodes,
+    startNode: 'entry',
+    _procTexts: {
+      ...procTexts,
+      [`_proc.layer.name.${n}`]: { zh: `SECTOR-${n}: ${theme.zh}`, en: `SECTOR-${n}: ${theme.en}` },
+      [`_proc.layer.desc.${n}`]: { zh: `第${n}层。${theme.zh}。危险等级持续上升。`, en: `Layer ${n}. ${theme.en}. Threat level continues to rise.` }
+    }
+  };
 }
