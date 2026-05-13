@@ -28,30 +28,42 @@ export class Renderer {
     const player = this._state.get('player');
     if (!player) return;
 
-    this._stats.innerHTML = [
-      this._statBar('HP', player.hp, player.maxHp, 'hp'),
-      this._statBar('RAM', player.ram, player.maxRam, 'ram'),
-      `<button class="lang-toggle" id="lang-toggle">${i18n.t('lang.switch')}</button>`
-    ].join('');
+    this._stats.textContent = '';
+    this._stats.appendChild(this._statBar('HP', player.hp, player.maxHp, 'hp'));
+    this._stats.appendChild(this._statBar('RAM', player.ram, player.maxRam, 'ram'));
 
-    const langBtn = document.getElementById('lang-toggle');
-    if (langBtn) {
-      langBtn.addEventListener('click', () => {
-        i18n.toggle();
-      });
-    }
+    const langBtn = document.createElement('button');
+    langBtn.className = 'lang-toggle';
+    langBtn.id = 'lang-toggle';
+    langBtn.textContent = i18n.t('lang.switch');
+    langBtn.addEventListener('click', () => i18n.toggle());
+    this._stats.appendChild(langBtn);
   }
 
   _statBar(label, current, max, cls) {
-    return `
-      <div class="stat-bar">
-        <span class="label">${label}</span>
-        <div class="bar-track">
-          <div class="bar-fill ${cls}" style="width: ${(current / max) * 100}%"></div>
-        </div>
-        <span class="stat-value">${current}/${max}</span>
-      </div>
-    `;
+    const pct = max > 0 ? Math.min(100, Math.max(0, (current / max) * 100)) : 0;
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'stat-bar';
+
+    const labelEl = document.createElement('span');
+    labelEl.className = 'label';
+    labelEl.textContent = label;
+
+    const track = document.createElement('div');
+    track.className = 'bar-track';
+
+    const fill = document.createElement('div');
+    fill.className = `bar-fill ${cls}`;
+    fill.style.width = `${pct}%`;
+    track.appendChild(fill);
+
+    const value = document.createElement('span');
+    value.className = 'stat-value';
+    value.textContent = `${current}/${max}`;
+
+    wrapper.append(labelEl, track, value);
+    return wrapper;
   }
 
   /**
@@ -89,7 +101,7 @@ export class Renderer {
    * Clear the output area
    */
   clearOutput() {
-    this._output.innerHTML = '';
+    this._output.replaceChildren();
   }
 
   /**
@@ -97,7 +109,7 @@ export class Renderer {
    * @param {Array<{label: string, action: Function}>} choices
    */
   renderChoices(choices) {
-    this._choices.innerHTML = '';
+    this._choices.replaceChildren();
     choices.forEach((choice, index) => {
       const btn = document.createElement('button');
       btn.className = 'choice-btn';
@@ -116,22 +128,40 @@ export class Renderer {
   renderCombat(player, enemy) {
     const panel = document.createElement('div');
     panel.className = 'combat-panel neon-border';
-    panel.innerHTML = `
-      <div class="combat-title">${i18n.t('combat.title')}${enemy.name}</div>
-      <div class="combatant">
-        <div class="combatant-name player">${i18n.t('combat.you')}</div>
-        <div>${formatStat('HP', player.hp, player.maxHp)}</div>
-        <div>${formatStat('RAM', player.ram, player.maxRam)}</div>
-      </div>
-      <div class="combatant">
-        <div class="combatant-name enemy">${i18n.t('combat.enemy')}</div>
-        <div>${formatStat('HP', enemy.hp, enemy.maxHp)}</div>
-        <div class="stat-bar">
-          <span class="label">${i18n.t('combat.type')}</span>
-          <span>${enemy.type}</span>
-        </div>
-      </div>
-    `;
+
+    const title = document.createElement('div');
+    title.className = 'combat-title';
+    title.textContent = i18n.t('combat.title') + enemy.name;
+
+    const playerDiv = document.createElement('div');
+    playerDiv.className = 'combatant';
+    const playerName = document.createElement('div');
+    playerName.className = 'combatant-name player';
+    playerName.textContent = i18n.t('combat.you');
+    const playerHp = document.createElement('div');
+    playerHp.textContent = formatStat('HP', player.hp, player.maxHp);
+    const playerRam = document.createElement('div');
+    playerRam.textContent = formatStat('RAM', player.ram, player.maxRam);
+    playerDiv.append(playerName, playerHp, playerRam);
+
+    const enemyDiv = document.createElement('div');
+    enemyDiv.className = 'combatant';
+    const enemyName = document.createElement('div');
+    enemyName.className = 'combatant-name enemy';
+    enemyName.textContent = i18n.t('combat.enemy');
+    const enemyHp = document.createElement('div');
+    enemyHp.textContent = formatStat('HP', enemy.hp, enemy.maxHp);
+    const typeRow = document.createElement('div');
+    typeRow.className = 'stat-bar';
+    const typeLabel = document.createElement('span');
+    typeLabel.className = 'label';
+    typeLabel.textContent = i18n.t('combat.type');
+    const typeValue = document.createElement('span');
+    typeValue.textContent = enemy.type;
+    typeRow.append(typeLabel, typeValue);
+    enemyDiv.append(enemyName, enemyHp, typeRow);
+
+    panel.append(title, playerDiv, enemyDiv);
     this._output.appendChild(panel);
     this._output.scrollTop = this._output.scrollHeight;
   }

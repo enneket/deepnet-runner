@@ -64,18 +64,20 @@ class Game {
       }
     });
 
-    // Debug commands
-    window.game = {
-      state: this._state,
-      bus,
-      i18n,
-      god: () => {
-        this._state.update({
-          player: { hp: 999, maxHp: 999, ram: 999, maxRam: 999, attack: 50, credits: 999 }
-        });
-        console.log('God mode activated');
-      }
-    };
+    // Debug commands (dev only — exposed via console for testing)
+    if (typeof location !== 'undefined' && /^(localhost|127\.0\.0\.1|0\.0\.0\.0)$/.test(location.hostname)) {
+      window.game = {
+        state: this._state,
+        bus,
+        i18n,
+        god: () => {
+          this._state.update({
+            player: { hp: 999, maxHp: 999, ram: 999, maxRam: 999, attack: 50, credits: 999 }
+          });
+          console.log('God mode activated');
+        }
+      };
+    }
   }
 
   _updatePageTitle() {

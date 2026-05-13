@@ -1,4 +1,8 @@
+.git
+.gitignore
+.claude
+.gstack
+.code-review-graph
 docs
 test
-.git
-.code-review-graph
+*.md
