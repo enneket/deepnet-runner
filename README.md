@@ -14,7 +14,12 @@ open index.html
 npx serve .
 python3 -m http.server 8000
 
-# Docker
+# Docker Compose（推荐）
+cp .env.example .env   # 可选，修改端口
+docker compose up -d   # http://localhost:8080
+docker compose down
+
+# Docker 单独运行
 docker build -t deepnet-runner .
 docker run -p 8080:80 deepnet-runner
 ```
@@ -81,7 +86,7 @@ docker run -p 8080:80 deepnet-runner
 
 ## 调试
 
-浏览器控制台：
+仅在 localhost 下可用（生产环境自动禁用）：
 
 ```js
 game.god()           // 无敌模式
