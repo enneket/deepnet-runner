@@ -6,6 +6,7 @@ import { CombatSystem } from './systems/combat.js';
 import { InventorySystem } from './systems/inventory.js';
 import { SkillsSystem } from './systems/skills.js';
 import { i18n } from './systems/i18n.js';
+import { SaveManager } from './systems/save.js';
 
 /**
  * Initial player state
@@ -49,6 +50,8 @@ class Game {
     this._combat = new CombatSystem(this._state, this._renderer);
     this._inventory = new InventorySystem(this._state);
     this._skills = new SkillsSystem(this._state);
+    this._save = new SaveManager();
+    this._saveEnabled = false;
 
     bus.on('game:over', () => this._handleGameOver());
 
@@ -93,6 +96,23 @@ class Game {
     this._updatePageTitle();
     this._renderer.renderStats();
 
+    this._printBanner();
+
+    this._state.onChange(() => {
+      bus.emit('skills:checkLevelUp');
+      if (this._saveEnabled) {
+        this._save.save(this._state.state);
+      }
+    });
+
+    if (this._save.hasSave()) {
+      this._showContinueOrNew();
+    } else {
+      this._startNew();
+    }
+  }
+
+  _printBanner() {
     bus.emit('ui:message', {
       text: '\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557',
       className: 'neon-text'
@@ -106,6 +126,40 @@ class Game {
       className: 'neon-text'
     });
     bus.emit('ui:message', { text: '', className: '' });
+  }
+
+  _showContinueOrNew() {
+    const saved = this._save.load();
+    const layer = saved?.game?.currentLayer || 1;
+    const level = saved?.player?.level || 1;
+
+    bus.emit('ui:message', {
+      text: i18n.t('save.continue') + ` (Layer ${level > 1 ? layer : 1}, Lv${level})`,
+      className: 'event-text'
+    });
+    bus.emit('ui:message', { text: '', className: '' });
+
+    bus.emit('ui:choices', [
+      {
+        label: i18n.t('save.continue'),
+        action: () => this._continueGame()
+      },
+      {
+        label: i18n.t('save.newGame'),
+        action: () => {
+          this._saveEnabled = false;
+          this._save.clear();
+          this._startNew();
+        }
+      }
+    ]);
+  }
+
+  _continueGame() {
+    const saved = this._save.load();
+    this._state.reset(saved);
+    this._renderer.renderStats();
+
     bus.emit('ui:message', {
       text: i18n.t('game.subtitle'),
       className: 'event-text'
@@ -116,14 +170,35 @@ class Game {
     });
     bus.emit('ui:message', { text: '', className: '' });
 
-    this._state.onChange(() => {
-      bus.emit('skills:checkLevelUp');
+    const layer = this._state.get('game.currentLayer');
+    const node = this._state.get('game.currentNode');
+    bus.emit('exploration:enterLayer', layer);
+    if (node && node !== 'entry') {
+      bus.emit('exploration:chooseNode', node);
+    }
+    this._saveEnabled = true;
+  }
+
+  _startNew() {
+    this._saveEnabled = true;
+
+    bus.emit('ui:message', {
+      text: i18n.t('game.subtitle'),
+      className: 'event-text'
     });
+    bus.emit('ui:message', {
+      text: i18n.t('game.description'),
+      className: 'event-text'
+    });
+    bus.emit('ui:message', { text: '', className: '' });
 
     bus.emit('exploration:enterLayer', 1);
   }
 
   _handleGameOver() {
+    this._saveEnabled = false;
+    this._save.clear();
+
     const choices = [
       {
         label: i18n.t('game.restart'),
@@ -131,7 +206,8 @@ class Game {
           this._state.reset(INITIAL_STATE);
           this._renderer.renderStats();
           bus.emit('ui:clear');
-          bus.emit('exploration:enterLayer', 1);
+          this._printBanner();
+          this._startNew();
         }
       }
     ];

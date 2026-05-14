@@ -280,6 +280,12 @@ export const TRANSLATIONS = {
     'enemy.deepnet_prime': 'DeepNet原初体',
     'enemy.type.deepnet_prime': 'ICE / 创世',
 
+    // Save system
+    'save.continue': '▶ 继续游戏',
+    'save.newGame': '🔄 新游戏',
+    'save.saved': '💾 已存档',
+    'save.deleted': '存档已删除',
+
     // Language toggle
     'lang.switch': 'EN',
     'lang.current': '中文'
@@ -562,6 +568,12 @@ export const TRANSLATIONS = {
     'enemy.type.neural_sovereign': 'ICE / Neural',
     'enemy.deepnet_prime': 'DeepNet Prime',
     'enemy.type.deepnet_prime': 'ICE / Genesis',
+
+    // Save system
+    'save.continue': '▶ Continue',
+    'save.newGame': '🔄 New Game',
+    'save.saved': '💾 Game Saved',
+    'save.deleted': 'Save deleted',
 
     // Language toggle
     'lang.switch': '中',
